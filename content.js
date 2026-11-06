@@ -24,7 +24,7 @@ const SITE = {
 
   /* ---------- REQUIRED ---------- */
   name: "Jeffrey Valeros",                // Top-left corner and footer.
-  title: "IT Specialist",                 // Small label above the headline.
+  title: "IT Support Specialist",         // Small label above the headline. Also the job title in search results.
   headline: "I build operational systems where the rules are enforced by tests and build gates.", // The big sentence at the top.
   bio: "Three systems, one method: a clinic stock ledger that refuses silent edits, a read-only endpoint threat tracker that turns logs into incidents, and a CLI that normalises three security scanners into one report. In each one the rules are executable - a gate fails the build when they stop holding.", // Under the headline. 2-3 sentences.
 
