@@ -1,6 +1,7 @@
 /* You do not need to edit this file. Colors and sizes live at the top (":root"). */
 
 :root {
+  color-scheme: light dark;
   --bg: #F5F6F8;
   --surface: #FFFFFF;
   --ink: #0F1720;
@@ -282,6 +283,12 @@ h2.big { font-family: var(--display); font-weight: 700; font-size: 40px; letter-
 .layout__side { flex: 1 1 300px; max-width: 380px; min-width: 0; }
 .block { display: flex; flex-direction: column; gap: 24px; }
 .block h2 { font-family: var(--display); font-weight: 700; font-size: 30px; letter-spacing: -0.01em; }
+/* The "What I would change" paragraph: plain prose, same measure as the About text. */
+.block p.body { max-width: 62ch; font-size: 17px; line-height: 1.65; color: var(--muted); }
+
+/* The h1 of a standing page (About, Contact): same voice as the home hero, one step
+   smaller, so a generated page never looks like a different site. */
+.page-title { font-family: var(--display); font-weight: 700; font-size: clamp(34px, 5.5vw, 56px); line-height: 1.05; letter-spacing: -0.02em; }
 .features { display: flex; flex-direction: column; }
 .feature { display: flex; gap: 24px; padding: 22px 0; border-top: 1px solid var(--line); }
 .feature:last-child { border-bottom: 1px solid var(--line); }

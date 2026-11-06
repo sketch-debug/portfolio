@@ -136,11 +136,17 @@ function featureList(p) {
 function challengeList(p) {
   const items = list(p.challenges);
   if (!items.length) return '';
-  return '<section class="block"><h2>Challenges and solutions</h2><div class="pairs">' +
+  return '<section class="block"><h2>Decisions and trade-offs</h2><div class="pairs">' +
     items.map(function (c) {
-      return '<div class="pair"><div><span class="label">Challenge</span><p>' + esc(c && c.challenge) + '</p></div>' +
-        '<div><span class="label label--accent">Solution</span><p>' + esc(c && c.solution) + '</p></div></div>';
+      return '<div class="pair"><div><span class="label">The trade-off</span><p>' + esc(c && c.challenge) + '</p></div>' +
+        '<div><span class="label label--accent">What I did</span><p>' + esc(c && c.solution) + '</p></div></div>';
     }).join('') + '</div></section>';
+}
+
+// Hidden until content.js has a real answer: the section most portfolios skip.
+function changeBlock(p) {
+  if (!has(p.change)) return '';
+  return '<section class="block"><h2>What I would change</h2><p class="body">' + esc(p.change) + '</p></section>';
 }
 
 function resultList(p) {
@@ -170,6 +176,40 @@ function pagerHtml(p, index, valid) {
     (dir === 'next' ? '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' : '') +
     '</a>';
   return '<section class="next"><div class="wrap pager">' + card(prev, 'prev') + card(next, 'next') + '</div></section>';
+}
+
+const MENU_ICON = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+
+// The same header on every generated page. prefix walks back to the site root:
+// '../../' from projects/<id>/, '../' from about/ and contact/.
+function siteHeader(prefix) {
+  return '<a class="skip" href="#main">Skip to content</a>\n' +
+    '<header class="site-header"><div class="wrap bar">' +
+    '<a class="brand" href="' + prefix + 'index.html">' + esc(SITE_NAME) + '</a>' +
+    '<button type="button" class="menu-btn" data-menu aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">' + MENU_ICON + '</button>' +
+    '<nav id="site-nav" aria-label="Primary">' +
+    '<a class="nav-link" href="' + prefix + 'index.html#projects">Work</a>' +
+    ((has(SITE.about) || has(SITE.skills)) ? '<a class="nav-link" href="' + prefix + 'about/">About</a>' : '') +
+    '<a class="nav-link" href="' + prefix + 'contact/">Contact</a>' +
+    linkButton('Email me', has(SITE.email) ? 'mailto:' + SITE.email : '', 'btn--primary btn--sm', false) +
+    '</nav></div></header>\n';
+}
+
+// One Person record for search engines, built from content.js alone.
+function personJsonLd() {
+  const person = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: SITE_NAME
+  };
+  if (has(SITE.title)) person.jobTitle = String(SITE.title);
+  if (has(SITE.bio)) person.description = String(SITE.bio);
+  if (has(SITE.email)) person.email = 'mailto:' + SITE.email;
+  if (BASE) person.url = ABS('');
+  const sameAs = [SITE.github, SITE.linkedin].filter(has).map(String);
+  if (sameAs.length) person.sameAs = sameAs;
+  // \u003c keeps the JSON from ever closing the script tag early.
+  return '<script type="application/ld+json">' + JSON.stringify(person).replace(/</g, '\\u003c') + '</script>\n';
 }
 
 function pageHtml(p, index, valid) {
@@ -212,10 +252,10 @@ function pageHtml(p, index, valid) {
     .map((x) => '<div class="glance__item' + x[2] + '"><span class="label' + (x[2] ? ' label--accent' : '') + '">' + x[0] +
       '</span><p>' + esc(x[1]) + '</p></div>').join('');
 
-  const main = featureList(p) + challengeList(p) + resultList(p) + gallery(p);
+  const main = featureList(p) + challengeList(p) + resultList(p) + changeBlock(p) + gallery(p);
   const side = list(p.stack).length
-    ? '<aside class="layout__side"><div class="sidecard"><h2 class="label">Tech stack</h2><div class="tags">' +
-      list(p.stack).map((t) => '<span class="tag">' + esc(t) + '</span>').join('') + '</div></div></aside>'
+    ? '<div class="layout__side"><div class="sidecard"><h2 class="label">Tech stack</h2><div class="tags">' +
+      list(p.stack).map((t) => '<span class="tag">' + esc(t) + '</span>').join('') + '</div></div></div>'
     : '';
   const layout = (main || side)
     ? '<div class="layout wrap"><div class="layout__main">' + main + '</div>' + side + '</div>' : '';
@@ -233,17 +273,9 @@ function pageHtml(p, index, valid) {
     '<link rel="preload" href="../../fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>\n' +
     '<link rel="stylesheet" href="../../fonts.css">\n' +
     '<link rel="stylesheet" href="../../style.css">\n' +
+    personJsonLd() +
     '</head>\n<body>\n' +
-    '<a class="skip" href="#main">Skip to content</a>\n' +
-    '<header class="site-header"><div class="wrap bar">' +
-    '<a class="brand" href="../../index.html">' + esc(SITE_NAME) + '</a>' +
-    '<button type="button" class="menu-btn" data-menu aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">' +
-    '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>' +
-    '<nav id="site-nav" aria-label="Primary">' +
-    '<a class="nav-link" href="../../index.html#projects">Projects</a>' +
-    ((has(SITE.about) || has(SITE.skills)) ? '<a class="nav-link" href="../../index.html#about">About</a>' : '') +
-    '<a class="btn btn--primary btn--sm" href="../../index.html#contact">Contact</a>' +
-    '</nav></div></header>\n' +
+    siteHeader('../../') +
     '<main id="main" tabindex="-1">\n<article>\n<div class="wrap project">' +
     '<a class="crumb" href="../../index.html#projects"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>All projects</a>' +
     '<div class="pagehead"><div class="pagehead__text"><div class="pagehead__meta">' +
@@ -345,6 +377,91 @@ function notFoundHtml() {
     '</body>\n</html>\n';
 }
 
+// The two standing pages, About and Contact, share one shell: same head, same
+// header, same footer as a project page, so nothing can drift apart.
+function simplePage(opts) {
+  const url = BASE ? ABS(opts.path) : '';
+  const accent = /^#[0-9a-f]{3,8}$/i.test(String(SITE.accentColor || '')) ? SITE.accentColor : '#2438D9';
+  const head = [
+    '<!doctype html>',
+    '<html lang="en">',
+    '<head>',
+    '<meta charset="utf-8">',
+    '<meta name="viewport" content="width=device-width, initial-scale=1">',
+    '<title>' + esc(opts.title) + '</title>',
+    '<meta name="description" content="' + esc(opts.desc) + '">',
+    url ? '<link rel="canonical" href="' + esc(url) + '">' : '',
+    '<meta property="og:type" content="website">',
+    '<meta property="og:title" content="' + esc(opts.title) + '">',
+    '<meta property="og:description" content="' + esc(opts.desc) + '">',
+    url ? '<meta property="og:url" content="' + esc(url) + '">' : '',
+    BASE ? '<meta property="og:image" content="' + esc(ABS('images/share.png')) + '">' : '',
+    BASE ? '<meta property="og:image:width" content="1200">' : '',
+    BASE ? '<meta property="og:image:height" content="630">' : '',
+    '<meta name="twitter:card" content="summary_large_image">',
+    '<meta name="theme-color" content="' + esc(accent) + '">',
+    '<link rel="icon" href="' + FAVICON + '">',
+    '<link rel="preload" href="../fonts/ibm-plex-sans.woff2" as="font" type="font/woff2" crossorigin>',
+    '<link rel="preload" href="../fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>',
+    '<link rel="stylesheet" href="../fonts.css">',
+    '<link rel="stylesheet" href="../style.css">',
+    personJsonLd(),
+    '</head>',
+    '<body>'
+  ].filter(function (line) { return line !== ''; }).join('\n');
+
+  return head + '\n' + siteHeader('../') +
+    '<main id="main" tabindex="-1">\n' + opts.body + '\n</main>\n' +
+    '<footer class="footer"><div class="wrap"><span>&copy; ' + new Date().getFullYear() + ' ' + esc(SITE_NAME) +
+    '</span><a href="../index.html">Back to the portfolio</a></div></footer>\n' +
+    '<script src="../page.js"></script>\n' +
+    '<script src="../live.js"></script>\n' +
+    '</body>\n</html>\n';
+}
+
+function aboutBody() {
+  const paras = list(SITE.about).map(function (t) { return '<p class="body">' + esc(t) + '</p>'; }).join('');
+  const skills = list(SITE.skills).filter(function (g) { return has(g.items); }).map(function (g) {
+    return '<div class="skillgroup"><h2 class="label">' + esc(g.group) + '</h2><div>' +
+      list(g.items).map(function (s) { return '<span class="skill">' + esc(s) + '</span>'; }).join('') + '</div></div>';
+  }).join('');
+  const actions = linkButton('Email me', has(SITE.email) ? 'mailto:' + SITE.email : '', 'btn--primary', false) +
+    linkButton('Download resume', SITE.resumeUrl, 'btn--secondary', false) +
+    linkButton('LinkedIn', SITE.linkedin, 'btn--secondary', true);
+
+  return '<section class="wrap project">' +
+    '<p class="label label--accent">About</p>' +
+    '<div class="pagehead__text">' +
+    (has(SITE.title) ? '<p class="eyebrow">' + esc(SITE.title) + '</p>' : '') +
+    '<h1 class="page-title">' + esc(SITE_NAME) + '</h1>' +
+    (has(SITE.headline) ? '<p class="lead">' + esc(SITE.headline) + '</p>' : '') + '</div>' +
+    (actions ? '<div class="actions">' + actions + '</div>' : '') +
+    (has(SITE.availability) ? '<p class="avail"><span class="dot dot--ok" aria-hidden="true"></span>' + esc(SITE.availability) + '</p>' : '') +
+    '</section>' +
+    '<div class="about"><div class="wrap section">' +
+    (paras ? '<div class="about__text"><h2 class="big">How I work</h2>' + paras + '</div>' : '') +
+    (skills ? '<div class="skills">' + skills + '</div>' : '') +
+    '</div></div>';
+}
+
+function contactBody() {
+  const email = has(SITE.email)
+    ? '<a class="email" href="mailto:' + esc(SITE.email) + '">' + esc(SITE.email) + '</a>'
+    : '';
+  const links = linkButton('LinkedIn', SITE.linkedin, 'btn--outline-dark', true) +
+    linkButton('GitHub', SITE.github, 'btn--outline-dark', true);
+
+  return '<section class="contact"><div class="wrap">' +
+    '<div class="contact__text"><p class="label">Contact</p>' +
+    '<h1 class="page-title">Tell me what is breaking, and what it costs.</h1>' +
+    '<p class="contact__note">A sentence about the system, the deadline and who uses it is enough to start. ' +
+    'Email reaches me directly - it is the one action on this site.</p>' +
+    email +
+    (has(SITE.replyTime) ? '<p class="contact__note">I reply within ' + esc(SITE.replyTime) + '.</p>' : '') +
+    (links ? '<div class="contact__links">' + links + '</div>' : '') +
+    '</div></div></section>';
+}
+
 /* ---------- 5. write the files ---------- */
 
 const valid = [];
@@ -391,11 +508,42 @@ valid.forEach(function (p, i) {
   written.push('projects/' + p.id + '/index.html');
 });
 
+const standing = [];
+if (has(SITE.about) || has(SITE.skills)) {
+  standing.push({
+    dir: 'about',
+    body: aboutBody(),
+    title: has(SITE.name) ? 'About ' + SITE.name : 'About',
+    desc: has(SITE.bio) ? String(SITE.bio) : 'About'
+  });
+}
+standing.push({
+  dir: 'contact',
+  body: contactBody(),
+  title: 'Contact | ' + SITE_NAME,
+  desc: 'Email ' + SITE_NAME + (has(SITE.title) ? ', ' + SITE.title : '') + '.'
+});
+
+standing.forEach(function (page) {
+  const dir = path.join(ROOT, page.dir);
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'index.html'), simplePage({
+    path: page.dir + '/',
+    body: page.body,
+    title: page.title,
+    desc: page.desc
+  }), 'utf8');
+  written.push(page.dir + '/index.html');
+});
+
 if (BASE) {
   const today = new Date().toISOString().slice(0, 10);
   const urls = ['<url><loc>' + esc(ABS('')) + '</loc><lastmod>' + today + '</lastmod></url>']
     .concat(valid.map(function (p) {
       return '<url><loc>' + esc(ABS('projects/' + p.id + '/')) + '</loc><lastmod>' + today + '</lastmod></url>';
+    }))
+    .concat(standing.map(function (page) {
+      return '<url><loc>' + esc(ABS(page.dir + '/')) + '</loc><lastmod>' + today + '</lastmod></url>';
     }));
   fs.writeFileSync(path.join(ROOT, 'sitemap.xml'),
     '<?xml version="1.0" encoding="UTF-8"?>\n' +

@@ -151,12 +151,13 @@
     email: 'text', github: 'text', linkedin: 'text', contactFormUrl: 'text',
     availability: 'text', replyTime: 'text', resumeUrl: 'text', photo: 'text',
     accentColor: 'text', siteUrl: 'text',
+    analyticsProvider: 'text', analyticsSite: 'text',
     otherLinks: 'list', about: 'list', skills: 'list', testimonials: 'list', credentials: 'list'
   };
 
   var PROJECT_FIELDS = {
     id: 'text', name: 'text', type: 'text', summary: 'text', status: 'text', role: 'text',
-    result: 'text', timeline: 'text', team: 'text', problem: 'text', built: 'text',
+    result: 'text', timeline: 'text', team: 'text', problem: 'text', built: 'text', change: 'text',
     features: 'list', stack: 'list', challenges: 'list', results: 'list', screenshots: 'list',
     demoUrl: 'text', githubUrl: 'text', videoUrl: 'text'
   };
@@ -279,17 +280,10 @@
   /* ====================== shared pieces ====================== */
 
   function headerHtml() {
-    var links = '<a class="nav-link" href="#/" data-scroll="projects">Projects</a>';
-    if (has(SITE.testimonials) || has(SITE.credentials)) links += '<a class="nav-link" href="#/" data-scroll="proof">Proof</a>';
-    if (has(SITE.about) || has(SITE.skills)) links += '<a class="nav-link" href="#/" data-scroll="about">About</a>';
-    if (has(SITE.resumeUrl)) {
-      var r = SITE.resumeUrl;
-      links += isPlaceholder(r)
-        ? '<span class="nav-link" style="opacity:.55" title="Add resumeUrl in content.js">Resume' + icon('download') +
-          '<span class="sr-only"> - link not set yet, add it in content.js</span></span>'
-        : (safeUrl(r) ? '<a class="nav-link" href="' + esc(safeUrl(r)) + '" target="_blank" rel="noopener noreferrer">Resume' + icon('download') + '</a>' : '');
-    }
-    links += '<a class="btn btn--primary btn--sm" href="#/" data-scroll="contact">Contact</a>';
+    var links = '<a class="nav-link" href="#/" data-scroll="projects">Work</a>';
+    if (has(SITE.about) || has(SITE.skills)) links += '<a class="nav-link" href="about/">About</a>';
+    links += '<a class="nav-link" href="contact/">Contact</a>';
+    links += btn('Email me', has(SITE.email) ? 'mailto:' + SITE.email : '', 'btn--primary btn--sm');
 
     return '<a class="skip" href="#main" data-skip>Skip to content</a>' +
       '<header class="site-header" id="top"><div class="wrap bar">' +
@@ -362,7 +356,9 @@
         blocks += '<div><span class="label">Works with</span><div class="tags">' +
           topSkills.map(function (s) { return '<span class="tag">' + esc(s) + '</span>'; }).join('') + '</div></div>';
       }
-      if (blocks) side = '<aside class="hero__side"><div class="sidecard hero__card">' + blocks + '</div></aside>';
+      // A div, not an <aside>: a complementary landmark nested inside <main> is
+      // flagged by axe, and this card is decoration next to the heading anyway.
+      if (blocks) side = '<div class="hero__side"><div class="sidecard hero__card">' + blocks + '</div></div>';
     }
     // Never ship empty text nodes: a blank <h1> is announced as "heading level 1"
     // with no words, and empty paragraphs leave gaps. Falls back to the name while
@@ -372,7 +368,8 @@
     var lead = has(SITE.bio) ? '<p class="lead">' + esc(SITE.bio) + '</p>' : '';
     return '<section class="hero wrap"><div class="hero__text">' + eyebrow +
       '<h1>' + esc(heading) + '</h1>' + lead +
-      '<div class="actions"><a class="btn btn--primary" href="#/" data-scroll="projects">View projects' + icon('arrow') + '</a>' +
+      '<div class="actions">' + btn('Email me', has(SITE.email) ? 'mailto:' + SITE.email : '', 'btn--primary', 'arrow') +
+      '<a class="btn btn--secondary" href="#/" data-scroll="projects">See the work</a>' +
       btn('Download resume', SITE.resumeUrl, 'btn--secondary', 'download') + '</div>' +
       '<p class="reply">Hiring, or have a project in mind? <a href="#/" data-scroll="contact">Get in touch</a>.' +
       (has(SITE.replyTime) ? ' I reply within ' + esc(SITE.replyTime) + '.' : '') + '</p>' +
@@ -490,9 +487,9 @@
         }).join('') + '</div></section>' : '';
 
     var challenges = list(p.challenges).length
-      ? '<section class="block"><h2>Challenges and solutions</h2><div class="pairs">' + list(p.challenges).map(function (c) {
-          return '<div class="pair"><div><span class="label">Challenge</span><p>' + esc(c.challenge) + '</p></div>' +
-            '<div><span class="label label--accent">Solution</span><p>' + esc(c.solution) + '</p></div></div>';
+      ? '<section class="block"><h2>Decisions and trade-offs</h2><div class="pairs">' + list(p.challenges).map(function (c) {
+          return '<div class="pair"><div><span class="label">The trade-off</span><p>' + esc(c.challenge) + '</p></div>' +
+            '<div><span class="label label--accent">What I did</span><p>' + esc(c.solution) + '</p></div></div>';
         }).join('') + '</div></section>' : '';
 
     var results = list(p.results).length
@@ -500,16 +497,21 @@
           return '<div class="tile"><strong>' + esc(r.value) + '</strong><span>' + esc(r.label) + '</span></div>';
         }).join('') + '</div></section>' : '';
 
+    // "What I would change" - the part most portfolios skip, and the one a good
+    // interviewer reads first. Hidden until there is a real answer in content.js.
+    var change = has(p.change)
+      ? '<section class="block"><h2>What I would change</h2><p class="body">' + esc(p.change) + '</p></section>' : '';
+
     var gallery = shots.length > 1
       ? '<section class="block"><h2>Screenshots</h2><div class="gallery">' + shots.slice(1).map(function (s, n) {
           return shot(s, p.name + ' screenshot ' + (n + 2));
         }).join('') + '</div></section>' : '';
 
     var side = list(p.stack).length
-      ? '<aside class="layout__side"><div class="sidecard"><h2 class="label">Tech stack</h2><div class="tags">' +
-        list(p.stack).map(function (t) { return '<span class="tag">' + esc(t) + '</span>'; }).join('') + '</div></div></aside>' : '';
+      ? '<div class="layout__side"><div class="sidecard"><h2 class="label">Tech stack</h2><div class="tags">' +
+        list(p.stack).map(function (t) { return '<span class="tag">' + esc(t) + '</span>'; }).join('') + '</div></div></div>' : '';
 
-    var main = features + challenges + results + gallery;
+    var main = features + challenges + results + change + gallery;
     var layout = (main || side)
       ? '<div class="layout wrap"><div class="layout__main">' + main + '</div>' + side + '</div>' : '';
 
@@ -550,6 +552,58 @@
 
   /* ====================== routing and rendering ====================== */
 
+  /* ====================== structured data and analytics ====================== */
+
+  // One Person record for search engines: who the site is about, plus the same
+  // profiles that are linked from the contact section.
+  function writeJsonLd() {
+    var sameAs = [SITE.github, SITE.linkedin]
+      .concat(list(SITE.otherLinks).map(function (l) { return l && l.url; }))
+      .filter(function (u) { return has(u) && !isPlaceholder(u) && /^https?:/i.test(String(u)); });
+    var person = {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: SITE_NAME,
+      jobTitle: has(SITE.title) ? String(SITE.title) : undefined,
+      description: has(SITE.bio) ? String(SITE.bio) : undefined,
+      url: has(SITE.siteUrl) ? String(SITE.siteUrl) : undefined,
+      email: has(SITE.email) && !isPlaceholder(SITE.email) ? 'mailto:' + SITE.email : undefined,
+      sameAs: sameAs.length ? sameAs : undefined
+    };
+    var script = document.querySelector('script[data-person]');
+    if (!script) {
+      script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.setAttribute('data-person', '');
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify(person);
+  }
+
+  // Analytics stays off until a provider is named in content.js: no name, no script,
+  // and it is never loaded on your own computer.
+  var analyticsLoaded = false;
+  function loadAnalytics() {
+    if (analyticsLoaded) return;
+    analyticsLoaded = true;
+    if (isLocalPreview()) return;
+    var provider = String(SITE.analyticsProvider || '').trim().toLowerCase();
+    var code = String(SITE.analyticsSite || '').trim();
+    if (!code || isPlaceholder(code)) return;
+    var s = document.createElement('script');
+    s.defer = true;
+    if (provider === 'goatcounter') {
+      s.src = 'https://gc.zgo.at/count.js';
+      s.setAttribute('data-goatcounter', 'https://' + code + '.goatcounter.com/count');
+    } else if (provider === 'plausible') {
+      s.src = 'https://plausible.io/js/script.js';
+      s.setAttribute('data-domain', code);
+    } else {
+      return;
+    }
+    document.head.appendChild(s);
+  }
+
   function route() {
     var hash = location.hash || '';
     var m = hash.match(/^#\/project\/([^/?#]+)/);
@@ -583,6 +637,9 @@
 
     var desc = p ? p.summary : String(SITE.headline || '') + ' ' + String(SITE.bio || '');
     if (metaEl) metaEl.setAttribute('content', has(desc) ? String(desc).trim() : DEFAULT_DESC);
+
+    writeJsonLd();
+    loadAnalytics();
 
     // Ask for live repository details now that the placeholders are on the page.
     if (window.PortfolioLive) window.PortfolioLive.refresh();

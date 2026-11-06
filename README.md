@@ -70,7 +70,7 @@ Every system already has an address inside the one-page site (`#/project/<id>`),
 
 1. Open a terminal in this folder.
 2. Run **`node build.js`** (nothing to install). If your address is not in `content.js` yet, run **`node build.js --site=https://your-name.github.io/portfolio/`** instead.
-3. That writes `projects/<id>/index.html` for each system, plus `sitemap.xml`.
+3. That writes `projects/<id>/index.html` for each system, `about/index.html`, `contact/index.html`, `404.html` and `sitemap.xml`.
 4. Run it again **every time you add or change a system**, then redeploy.
 
 The one-page site keeps working even if you never run it. To set the address once and for all, fill in `siteUrl` in `content.js`.
@@ -130,11 +130,26 @@ Whichever you choose, put the real address in `siteUrl` in `content.js` and run 
 ## 6. Connect your own domain (for example `yourname.com`)
 
 1. Buy a domain from any registrar (Namecheap, Cloudflare, Google/Squarespace Domains, and so on). Typical cost is about $10-15 a year.
-2. **Netlify:** open your site, then **Domain management**, then **Add a domain** (or **Add custom domain**) and type your domain.
-3. Netlify shows the exact DNS settings to use. Either change your domain's **nameservers** to the ones Netlify gives you, or add the records it lists at your registrar. Copy them exactly.
-4. Wait. This can take from a few minutes to 24 hours. Netlify adds the free HTTPS padlock automatically.
+2. In this repository: **Settings**, **Pages**, **Custom domain**, type your domain, **Save**. GitHub writes a file called `CNAME` into the branch; do not delete it.
+3. At your registrar's DNS page, add **exactly** these records. `@` means the bare domain (`yourname.com`), and `www` means `www.yourname.com`.
 
-*GitHub Pages:* **Settings**, **Pages**, **Custom domain**, then follow the DNS instructions shown there.
+| Type | Name | Value |
+| --- | --- | --- |
+| A | `@` | `185.199.108.153` |
+| A | `@` | `185.199.109.153` |
+| A | `@` | `185.199.110.153` |
+| A | `@` | `185.199.111.153` |
+| AAAA | `@` | `2606:50c0:8000::153` |
+| AAAA | `@` | `2606:50c0:8001::153` |
+| AAAA | `@` | `2606:50c0:8002::153` |
+| AAAA | `@` | `2606:50c0:8003::153` |
+| CNAME | `www` | `sketch-debug.github.io` |
+
+   The four AAAA rows are optional (IPv6). If your registrar offers **ALIAS** or **ANAME** instead of A records, one record pointing `@` at `sketch-debug.github.io` also works. Do not put the repository name in the CNAME value: it is `sketch-debug.github.io`, not `sketch-debug.github.io/portfolio`.
+4. Wait for the DNS change (minutes to 24 hours), then in **Settings**, **Pages** tick **Enforce HTTPS**. GitHub issues the certificate itself, free, usually within an hour of the DNS being right.
+5. Finally put the new address in `siteUrl` in `content.js`, run `node build.js`, update the `Sitemap:` line in `robots.txt`, and redeploy. Every canonical link, share tag and sitemap entry then points at the domain instead of `github.io`.
+
+*Using Netlify instead?* Open your site, **Domain management**, **Add a domain**, and copy the records Netlify shows. Netlify adds HTTPS automatically.
 
 ## 7. If something breaks
 
@@ -170,10 +185,22 @@ Whichever you choose, put the real address in `siteUrl` in `content.js` and run 
 - **Message form:** make a free form at [formspree.io](https://formspree.io), copy its link, and paste it into `contactFormUrl` in `content.js`. A form then appears in the Contact section: it sends in the background, shows "Message sent" inline, and carries a hidden spam trap. Leave it `""` and visitors just see your email and links.
 - **Share image and link preview:** `images/share.png` (1200 x 630) already exists as a plain placeholder. Replace it with a real picture when you have one. If your address changes, put the new one in `siteUrl` in `content.js` and run `node build.js`, which rewrites the addresses in `index.html` and the pages under `projects/`; then update the `Sitemap:` line in `robots.txt` by hand.
 - **The 404 page** (`404.html`) is what visitors see for a wrong address on the live site. Its stylesheet and its links point at your site address, because GitHub Pages shows that page at whatever address failed and a plain `style.css` would then be looked for in the wrong folder. One side effect: double-clicking `404.html` on your own computer shows it unstyled. Set `siteUrl` in `content.js` and rebuild so the address inside it is exact.
+- **"What I would change":** fill in `change` on a system and a short honest paragraph appears after its results. Empty, the section is simply absent. This is the field a good interviewer reads first, so write the real answer.
+- **Analytics, off by default:** put `"goatcounter"` in `analyticsProvider` and your site code in `analyticsSite` (for example `"jeffreyvaleros"`; GoatCounter is free and cookie-free), or `"plausible"` with your domain. Nothing is loaded until both lines are filled, and never on your own computer. Leave both empty and the site makes no third-party requests at all.
 - **Dark mode** follows each visitor's device setting automatically.
 - **Printing:** the site has print styles, so **Ctrl + P** gives a clean black-on-white page.
 - **Accent color:** change `accentColor` in `content.js`. Pick a dark color so the white button text stays readable.
 - **Fonts:** they live in `fonts/` and load from your own site, not from Google. `fonts.css` lists them.
+
+## 9. Every three months (15 minutes)
+
+- [ ] Open the live site on your phone and on a laptop. Click every project, About, Contact and the email button.
+- [ ] Check that the email address and LinkedIn link still work, and that the availability line is still true.
+- [ ] Update each system's `result` if you now have a real number, and add screenshots for anything still showing an empty frame.
+- [ ] Run `node build.js`, then `git add -A`, `git commit -m "Quarterly refresh"`, `git push`.
+- [ ] If a project repository is now public, put its link in `githubUrl` so the Source button and the live repository line appear.
+- [ ] In the browser, run Lighthouse (**F12**, then **Lighthouse**, **Mobile**) on the home page and one project page. Performance, Accessibility, Best Practices and SEO should each still be 95 or more.
+- [ ] Delete any project you would no longer defend in an interview. Three strong case studies beat eight thin ones.
 
 ## Honest content only
 
