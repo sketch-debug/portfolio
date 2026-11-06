@@ -81,7 +81,7 @@ The one-page site keeps working even if you never run it. To set the address onc
 - **Naming rule:** `<system id>-1.jpg`, `<system id>-2.jpg`, and so on. The first one is the cover.
 - **Ideal size:** **1600 x 1000 pixels**, JPG or WebP, under 300 KB each. [squoosh.app](https://squoosh.app) shrinks images for free.
 - If a picture is missing, the site shows a quiet placeholder frame (no broken image). While you are previewing on your own computer the frame is labelled `[ADD SCREENSHOT]`; visitors never see that label.
-- Your resume goes in `files/`. See `files/README.txt`.
+- **Your resume:** `files/Jeffrey-Valeros-Resume.pdf` is already wired up. The **Download resume** button appears in the hero and on the About page, and disappears by itself if you empty `resumeUrl`. To change the resume, edit `files/resume.html` and save it as a PDF over that file (Chrome: **Ctrl + P**, **Save as PDF**, A4) - the full steps are in `files/README.txt`.
 
 ## 5. Publish it online (GitHub Pages)
 

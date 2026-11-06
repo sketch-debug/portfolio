@@ -370,7 +370,7 @@
       '<h1>' + esc(heading) + '</h1>' + lead +
       '<div class="actions">' + btn('Email me', has(SITE.email) ? 'mailto:' + SITE.email : '', 'btn--primary', 'arrow') +
       '<a class="btn btn--secondary" href="#/" data-scroll="projects">See the work</a>' +
-      btn('Download resume', SITE.resumeUrl, 'btn--secondary', 'download') + '</div>' +
+      btn('Download resume', SITE.resumeUrl, 'btn--secondary', 'download', ' download') + '</div>' +
       '<p class="reply">Hiring, or have a project in mind? <a href="#/" data-scroll="contact">Get in touch</a>.' +
       (has(SITE.replyTime) ? ' I reply within ' + esc(SITE.replyTime) + '.' : '') + '</p>' +
       (has(SITE.availability) && !side ? '<div class="avail"><span class="dot dot--ok" aria-hidden="true"></span>' + esc(SITE.availability) + '</div>' : '') +

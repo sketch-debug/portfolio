@@ -425,8 +425,12 @@ function aboutBody() {
     return '<div class="skillgroup"><h2 class="label">' + esc(g.group) + '</h2><div>' +
       list(g.items).map(function (s) { return '<span class="skill">' + esc(s) + '</span>'; }).join('') + '</div></div>';
   }).join('');
+  // This page sits in /about/, so a relative resume path needs one step back to the site root.
+  const resumeHref = /^https?:/i.test(String(SITE.resumeUrl || ''))
+    ? SITE.resumeUrl
+    : (has(SITE.resumeUrl) ? '../' + String(SITE.resumeUrl).replace(/^\.?\//, '') : '');
   const actions = linkButton('Email me', has(SITE.email) ? 'mailto:' + SITE.email : '', 'btn--primary', false) +
-    linkButton('Download resume', SITE.resumeUrl, 'btn--secondary', false) +
+    linkButton('Download resume', resumeHref, 'btn--secondary', false, ' download') +
     linkButton('LinkedIn', SITE.linkedin, 'btn--secondary', true);
 
   return '<section class="wrap project">' +

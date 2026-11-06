@@ -14,8 +14,8 @@
 
    REQUIRED means the site needs it. OPTIONAL means you can leave it "" or [].
 
-   STILL MISSING: resumeUrl (the PDF), a photo, real result numbers, and one
-   "What I would change" line per system. Empty fields hide themselves, so the
+   STILL MISSING: a photo, real result numbers, and one "What I would change"
+   line per system. Empty fields hide themselves, so the
    site is complete and honest without them - fill them in when you have them.
    ====================================================================== */
 
@@ -40,7 +40,7 @@ const SITE = {
   /* ---------- HOME PAGE EXTRAS (all OPTIONAL) ---------- */
   availability: "Open to full-time roles and contract work", // Small green-dot label in the top section. "" = hide.
   replyTime: "",                          // Shows "I reply within [N] days." "" = hide.
-  resumeUrl: "",                          // [NEEDED] Put your PDF in the files folder, then use "files/resume.pdf" here. "" = button hidden.
+  resumeUrl: "files/Jeffrey-Valeros-Resume.pdf",  // The button hides itself when this is "". Generated from files/resume.html.
   photo: "",                              // [NEEDED] Your photo, for example "images/photo.jpg". "" = hide.
   accentColor: "#2438D9",                 // Main button color. Pick a DARK color so white text stays readable.
   siteUrl: "https://sketch-debug.github.io/portfolio/",  // Your live address. Used by build.js for share links and sitemap.xml.
