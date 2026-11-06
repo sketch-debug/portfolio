@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The lines between build:meta are rewritten by `node build.js` from content.js
+     (title, description, canonical, share tags). Everything else in this file is yours.
+     You do not need to edit these by hand unless you never run the build. -->
+<!-- build:meta -->
+<title>Portfolio</title>
+<meta name="description" content="Portfolio of software systems.">
+<link rel="canonical" href="https://sketch-debug.github.io/portfolio/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Portfolio">
+<meta property="og:description" content="Portfolio of software systems.">
+<meta property="og:url" content="https://sketch-debug.github.io/portfolio/">
+<meta property="og:image" content="https://sketch-debug.github.io/portfolio/images/share.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Portfolio share image">
+<meta name="twitter:card" content="summary_large_image">
+<!-- /build:meta -->
+<meta name="theme-color" content="#2438D9">
+
+<!-- Favicon: drawn inline as SVG, so there is no extra file to load or lose. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230F1720'/%3E%3Crect x='8' y='17' width='4' height='7' rx='1' fill='%232438D9'/%3E%3Crect x='14' y='12' width='4' height='12' rx='1' fill='%23FFFFFF'/%3E%3Crect x='20' y='8' width='4' height='16' rx='1' fill='%235B6CFF'/%3E%3C/svg%3E">
+
+<link rel="preload" href="fonts/ibm-plex-sans.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app"></div>
+
+<noscript>
+  <div class="fatal">
+    <h1>This site needs JavaScript</h1>
+    <p>Please turn on JavaScript in your browser to see this portfolio.</p>
+  </div>
+</noscript>
+
+<!-- If content.js has a typo (a missing comma or quote), show a friendly message instead of a blank page. -->
+<script>
+window.addEventListener('error', function (e) {
+  var file = String(e.filename || '');
+  if (file.indexOf('content.js') !== -1) {
+    document.getElementById('app').innerHTML =
+      '<div class="fatal"><h1>There is a typo in content.js</h1>' +
+      '<p>The page could not read your content file. Open content.js and look near the last thing you changed. ' +
+      'The usual causes are a missing comma at the end of a line, a missing quote mark, or a quote mark inside your text. ' +
+      'See "If something breaks" in README.md.</p>' +
+      '<p class="fatal__detail">' + String(e.message || '').replace(/</g, '&lt;') + '</p></div>';
+  }
+});
+</script>
+
+<script src="content.js"></script>
+<script src="live.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
