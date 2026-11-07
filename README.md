@@ -82,7 +82,7 @@ The one-page site keeps working even if you never run it. To set the address onc
 - **Ideal size:** **1600 x 1000 pixels**, JPG or WebP, under 300 KB each. [squoosh.app](https://squoosh.app) shrinks images for free.
 - If a picture is missing, the site shows a quiet placeholder frame (no broken image). While you are previewing on your own computer the frame is labelled `[ADD SCREENSHOT]`; visitors never see that label.
 - **Your resume:** `files/Jeffrey-Valeros-Resume.pdf` is already wired up. The **Download resume** button appears in the hero and on the About page, and disappears by itself if you empty `resumeUrl`. To change the resume, edit `files/resume.html` and save it as a PDF over that file (Chrome: **Ctrl + P**, **Save as PDF**, A4) - the full steps are in `files/README.txt`.
-- **About page details:** `location`, `phone`, `education` and `certifications` in `content.js` fill the four cards under **How I work** on the About page. Empty any of them (`""` or `[]`) and its card disappears. The phone number becomes a tap-to-call link automatically.
+- **About page details:** `location`, `phone`, `education`, `languages` and `certifications` in `content.js` fill the cards under **How I work** on the About page. Empty any of them (`""` or `[]`) and its card disappears. The phone number becomes a tap-to-call link automatically, and each `education` entry takes an optional `capstone` line.
 
 ## 5. Publish it online (GitHub Pages)
 

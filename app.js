@@ -149,7 +149,7 @@
   var SITE_FIELDS = {
     name: 'text', title: 'text', headline: 'text', bio: 'text',
     email: 'text', github: 'text', linkedin: 'text', contactFormUrl: 'text',
-    phone: 'text', location: 'text', education: 'list', certifications: 'list',
+    phone: 'text', location: 'text', education: 'list', certifications: 'list', languages: 'list',
     availability: 'text', replyTime: 'text', resumeUrl: 'text', photo: 'text',
     accentColor: 'text', siteUrl: 'text',
     analyticsProvider: 'text', analyticsSite: 'text',
@@ -171,8 +171,9 @@
     testimonials: { quote: 'text', name: 'text', role: 'text' },
     skills: { group: 'text', items: 'list' },
     otherLinks: { label: 'text', url: 'text' },
-    education: { qualification: 'text', school: 'text', year: 'text' },
-    certifications: { name: 'text', issuer: 'text', year: 'text' }
+    education: { qualification: 'text', school: 'text', year: 'text', capstone: 'text' },
+    certifications: { name: 'text', issuer: 'text', year: 'text' },
+    languages: { name: 'text', level: 'text' }
   };
 
   function actualType(v) {

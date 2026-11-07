@@ -68,7 +68,12 @@ const SITE = {
   education: [
     { qualification: "Bachelor of Science in Information Technology",
       school: "University of Camarines Norte",
-      year: "2022 - 2026" },
+      year: "2022 - 2026",
+      capstone: "Camarines Norte State College Vehicle Pass System" },
+  ],
+  languages: [
+    { name: "English", level: "Highly proficient" },
+    { name: "Filipino", level: "Native speaker" },
   ],
   certifications: [
     { name: "Certified IT Support Specialist", issuer: "Appdademiya", year: "Aug 2026" },

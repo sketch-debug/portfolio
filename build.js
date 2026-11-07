@@ -436,18 +436,26 @@ function aboutBody() {
   // The resume details: where he is, how to call, and what he holds. Each card
   // hides itself when its field is empty, like every other optional block.
   const telHref = (v) => 'tel:' + String(v).replace(/[^\d+]/g, '');
-  const card = (label, value, note) => (has(value) || has(note))
+  const card = (label, value, note, extra) => (has(value) || has(note) || has(extra))
     ? '<div class="glance__item"><span class="label">' + esc(label) + '</span>' +
       (has(value) ? '<p>' + value + '</p>' : '') +
-      (has(note) ? '<p class="muted">' + esc(note) + '</p>' : '') + '</div>'
+      (has(note) ? '<p class="muted">' + esc(note) + '</p>' : '') +
+      (has(extra) ? '<p class="muted">' + esc(extra) + '</p>' : '') + '</div>'
     : '';
   const joined = (parts) => parts.filter(has).map(esc).join(' · ');
   const details = [
     card('Location', has(SITE.location) ? esc(SITE.location) : '', ''),
     card('Phone', has(SITE.phone) ? '<a href="' + esc(telHref(SITE.phone)) + '">' + esc(SITE.phone) + '</a>' : '', ''),
     list(SITE.education).map(function (e) {
-      return card('Education', has(e.qualification) ? esc(e.qualification) : '', joined([e.school, e.year]));
+      return card('Education', has(e.qualification) ? esc(e.qualification) : '', joined([e.school, e.year]),
+        has(e.capstone) ? 'Capstone: ' + e.capstone : '');
     }).join(''),
+    list(SITE.languages).filter(function (l) { return has(l.name) || has(l.level); }).length
+      ? '<div class="glance__item"><span class="label">Languages</span>' +
+        list(SITE.languages).filter(function (l) { return has(l.name) || has(l.level); }).map(function (l) {
+          return '<p>' + esc(l.name) + (has(l.level) ? ' \u2014 ' + esc(l.level) : '') + '</p>';
+        }).join('') + '</div>'
+      : '',
     list(SITE.certifications).map(function (c) {
       return card('Certification', has(c.name) ? esc(c.name) : '', joined([c.issuer, c.year]));
     }).join(''),
