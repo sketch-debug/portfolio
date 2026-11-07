@@ -615,7 +615,8 @@
       jobTitle: has(SITE.title) ? String(SITE.title) : undefined,
       description: has(SITE.bio) ? String(SITE.bio) : undefined,
       url: has(SITE.siteUrl) ? String(SITE.siteUrl) : undefined,
-      email: has(SITE.email) && !isPlaceholder(SITE.email) ? 'mailto:' + SITE.email : undefined,
+      // A bare address: the mailto: scheme belongs on links, not in the record.
+      email: has(SITE.email) && !isPlaceholder(SITE.email) ? String(SITE.email) : undefined,
       telephone: has(SITE.phone) && !isPlaceholder(SITE.phone) ? String(SITE.phone) : undefined,
       address: has(SITE.location) && !isPlaceholder(SITE.location) ? postalAddress(SITE.location) : undefined,
       knowsLanguage: languages.length ? languages : undefined,

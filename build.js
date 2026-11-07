@@ -246,7 +246,8 @@ function personJsonLd() {
   };
   if (has(SITE.title)) person.jobTitle = String(SITE.title);
   if (has(SITE.bio)) person.description = String(SITE.bio);
-  if (has(SITE.email)) person.email = 'mailto:' + SITE.email;
+  // A bare address: the mailto: scheme belongs on links, not in the record.
+  if (has(SITE.email)) person.email = String(SITE.email);
   // Same facts the About page shows, in the shape a search engine expects.
   if (has(SITE.phone)) person.telephone = String(SITE.phone);
   if (has(SITE.location)) person.address = postalAddress(SITE.location);
