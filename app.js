@@ -599,7 +599,8 @@
   }
 
   // One Person record for search engines: who the site is about, plus the same
-  // profiles that are linked from the contact section.
+  // profiles that are linked from the contact section. Search engines only read a
+  // Person as part of a page type they support, so it is wrapped in ProfilePage.
   function writeJsonLd() {
     var sameAs = [SITE.github, SITE.linkedin]
       .concat(list(SITE.otherLinks).map(function (l) { return l && l.url; }))
@@ -609,7 +610,6 @@
       .filter(function (l) { return l && has(l.name) && !isPlaceholder(l.name); })
       .map(function (l) { return { '@type': 'Language', name: String(l.name) }; });
     var person = {
-      '@context': 'https://schema.org',
       '@type': 'Person',
       name: SITE_NAME,
       jobTitle: has(SITE.title) ? String(SITE.title) : undefined,
@@ -621,6 +621,11 @@
       knowsLanguage: languages.length ? languages : undefined,
       sameAs: sameAs.length ? sameAs : undefined
     };
+    var page = {
+      '@context': 'https://schema.org',
+      '@type': 'ProfilePage',
+      mainEntity: person
+    };
     var script = document.querySelector('script[data-person]');
     if (!script) {
       script = document.createElement('script');
@@ -628,7 +633,7 @@
       script.setAttribute('data-person', '');
       document.head.appendChild(script);
     }
-    script.textContent = JSON.stringify(person);
+    script.textContent = JSON.stringify(page);
   }
 
   // Analytics stays off until a provider is named in content.js: no name, no script,

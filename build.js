@@ -236,10 +236,11 @@ function postalAddress(value) {
   return address;
 }
 
-// One Person record for search engines, built from content.js alone.
+// Search engines only read a Person as part of a page type they support, and for a
+// page that is about a person that type is ProfilePage, whose mainEntity is the
+// Person itself. Built from content.js alone.
 function personJsonLd() {
   const person = {
-    '@context': 'https://schema.org',
     '@type': 'Person',
     name: SITE_NAME
   };
@@ -256,8 +257,13 @@ function personJsonLd() {
   if (BASE) person.url = ABS('');
   const sameAs = [SITE.github, SITE.linkedin].filter(has).map(String);
   if (sameAs.length) person.sameAs = sameAs;
+  const page = {
+    '@context': 'https://schema.org',
+    '@type': 'ProfilePage',
+    mainEntity: person
+  };
   // \u003c keeps the JSON from ever closing the script tag early.
-  return '<script type="application/ld+json">' + JSON.stringify(person).replace(/</g, '\\u003c') + '</script>\n';
+  return '<script type="application/ld+json">' + JSON.stringify(page).replace(/</g, '\\u003c') + '</script>\n';
 }
 
 function pageHtml(p, index, valid) {
