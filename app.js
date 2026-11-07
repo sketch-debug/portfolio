@@ -558,12 +558,34 @@
 
   /* ====================== structured data and analytics ====================== */
 
+  // "Daet 4600, Philippines" becomes a PostalAddress: the last part is the country,
+  // and a trailing 4-6 digit number on the rest is the postal code. A location with
+  // no commas stays a plain locality rather than being guessed at.
+  function postalAddress(value) {
+    var parts = String(value).split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+    var address = { '@type': 'PostalAddress' };
+    if (parts.length > 1) address.addressCountry = parts.pop();
+    var locality = parts.join(', ');
+    var withCode = locality.match(/^(.*?)\s+(\d{4,6})$/);
+    if (withCode) {
+      address.addressLocality = withCode[1];
+      address.postalCode = withCode[2];
+    } else if (locality) {
+      address.addressLocality = locality;
+    }
+    return address;
+  }
+
   // One Person record for search engines: who the site is about, plus the same
   // profiles that are linked from the contact section.
   function writeJsonLd() {
     var sameAs = [SITE.github, SITE.linkedin]
       .concat(list(SITE.otherLinks).map(function (l) { return l && l.url; }))
       .filter(function (u) { return has(u) && !isPlaceholder(u) && /^https?:/i.test(String(u)); });
+    // The same facts the About page shows, in the shape a search engine expects.
+    var languages = list(SITE.languages)
+      .filter(function (l) { return l && has(l.name) && !isPlaceholder(l.name); })
+      .map(function (l) { return { '@type': 'Language', name: String(l.name) }; });
     var person = {
       '@context': 'https://schema.org',
       '@type': 'Person',
@@ -572,6 +594,9 @@
       description: has(SITE.bio) ? String(SITE.bio) : undefined,
       url: has(SITE.siteUrl) ? String(SITE.siteUrl) : undefined,
       email: has(SITE.email) && !isPlaceholder(SITE.email) ? 'mailto:' + SITE.email : undefined,
+      telephone: has(SITE.phone) && !isPlaceholder(SITE.phone) ? String(SITE.phone) : undefined,
+      address: has(SITE.location) && !isPlaceholder(SITE.location) ? postalAddress(SITE.location) : undefined,
+      knowsLanguage: languages.length ? languages : undefined,
       sameAs: sameAs.length ? sameAs : undefined
     };
     var script = document.querySelector('script[data-person]');

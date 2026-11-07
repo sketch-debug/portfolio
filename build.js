@@ -195,6 +195,24 @@ function siteHeader(prefix) {
     '</nav></div></header>\n';
 }
 
+// "Daet 4600, Philippines" becomes a PostalAddress: the last part is the country,
+// and a trailing 4-6 digit number on the rest is the postal code. A location with
+// no commas stays a plain locality rather than being guessed at.
+function postalAddress(value) {
+  const parts = String(value).split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+  const address = { '@type': 'PostalAddress' };
+  if (parts.length > 1) address.addressCountry = parts.pop();
+  const locality = parts.join(', ');
+  const withCode = locality.match(/^(.*?)\s+(\d{4,6})$/);
+  if (withCode) {
+    address.addressLocality = withCode[1];
+    address.postalCode = withCode[2];
+  } else if (locality) {
+    address.addressLocality = locality;
+  }
+  return address;
+}
+
 // One Person record for search engines, built from content.js alone.
 function personJsonLd() {
   const person = {
@@ -205,6 +223,13 @@ function personJsonLd() {
   if (has(SITE.title)) person.jobTitle = String(SITE.title);
   if (has(SITE.bio)) person.description = String(SITE.bio);
   if (has(SITE.email)) person.email = 'mailto:' + SITE.email;
+  // Same facts the About page shows, in the shape a search engine expects.
+  if (has(SITE.phone)) person.telephone = String(SITE.phone);
+  if (has(SITE.location)) person.address = postalAddress(SITE.location);
+  const languages = list(SITE.languages)
+    .filter(function (l) { return has(l.name); })
+    .map(function (l) { return { '@type': 'Language', name: String(l.name) }; });
+  if (languages.length) person.knowsLanguage = languages;
   if (BASE) person.url = ABS('');
   const sameAs = [SITE.github, SITE.linkedin].filter(has).map(String);
   if (sameAs.length) person.sameAs = sameAs;
