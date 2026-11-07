@@ -236,10 +236,14 @@ function postalAddress(value) {
   return address;
 }
 
-// Search engines only read a Person as part of a page type they support, and for a
-// page that is about a person that type is ProfilePage, whose mainEntity is the
-// Person itself. Built from content.js alone.
-function personJsonLd() {
+// One <script> block per page. \u003c keeps the JSON from ever closing it early.
+function jsonLdScript(data) {
+  return '<script type="application/ld+json">' + JSON.stringify(data).replace(/</g, '\\u003c') + '</script>\n';
+}
+
+// Who the site is about, built from content.js alone, so the profile page and the
+// project pages all describe the same person.
+function personNode() {
   const person = {
     '@type': 'Person',
     name: SITE_NAME
@@ -258,13 +262,37 @@ function personJsonLd() {
   if (BASE) person.url = ABS('');
   const sameAs = [SITE.github, SITE.linkedin].filter(has).map(String);
   if (sameAs.length) person.sameAs = sameAs;
-  const page = {
+  return person;
+}
+
+// Search engines only read a Person as part of a page type they support, and for a
+// page that is about a person that type is ProfilePage, whose mainEntity is the
+// Person itself.
+function personJsonLd() {
+  return jsonLdScript({
     '@context': 'https://schema.org',
     '@type': 'ProfilePage',
-    mainEntity: person
+    mainEntity: personNode()
+  });
+}
+
+// A project page is about a system, not a person: describe the work itself and name
+// its author. Google has no rich-result feature for this yet, so it is here to be
+// machine-readable rather than to earn a card.
+function projectJsonLd(p) {
+  const url = ABS('projects/' + p.id + '/');
+  const work = {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: has(p.name) ? String(p.name) : 'System',
+    author: personNode()
   };
-  // \u003c keeps the JSON from ever closing the script tag early.
-  return '<script type="application/ld+json">' + JSON.stringify(page).replace(/</g, '\\u003c') + '</script>\n';
+  if (has(p.summary)) work.description = String(p.summary);
+  if (url) work.url = url;
+  if (has(p.githubUrl)) work.codeRepository = String(p.githubUrl);
+  const stack = list(p.stack).filter(has).map(String);
+  if (stack.length) work.keywords = stack.join(', ');
+  return jsonLdScript(work);
 }
 
 function pageHtml(p, index, valid) {
@@ -328,7 +356,7 @@ function pageHtml(p, index, valid) {
     '<link rel="preload" href="../../fonts/space-grotesk.woff2" as="font" type="font/woff2" crossorigin>\n' +
     '<link rel="stylesheet" href="../../fonts.css">\n' +
     '<link rel="stylesheet" href="../../style.css">\n' +
-    personJsonLd() +
+    projectJsonLd(p) +
     '</head>\n<body>\n' +
     siteHeader('../../') +
     '<main id="main" tabindex="-1">\n<article>\n<div class="wrap project">' +
