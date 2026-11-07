@@ -158,7 +158,7 @@ const PROJECTS = [
     type: "Web",
     summary: "A defensive, read-only threat detection and incident tracker for Windows endpoints, with a local dashboard.",
 
-    status: "",
+    status: "Live",        // v1.1.0, CI green, production install path
     role: "Solo",    // Solo, Lead or Contributor
     result: "",      // [NEEDED] one real number, if you have one
     timeline: "Oct 23 - 29, 2026", // from the first to the last commit
@@ -197,7 +197,7 @@ const PROJECTS = [
     type: "Desktop",
     summary: "An append-only stock ledger for a clinic, built as a macro-enabled Excel workbook that staff already know how to use.",
 
-    status: "",
+    status: "Live",        // finished workbook, staff handover docs
     role: "Solo",    // Solo, Lead or Contributor
     result: "",      // [NEEDED] one real number, if you have one
     timeline: "Oct 2026",          // every commit landed on Oct 15, 2026 - widen if the build ran longer
@@ -234,7 +234,7 @@ const PROJECTS = [
     type: "Desktop",
     summary: "A command-line tool that runs Checkov, Trivy and Bandit over a codebase and returns one normalized, prioritized SARIF report.",
 
-    status: "",
+    status: "Prototype",   // 0.1.0, AI advisor is mock-only
     role: "Solo",    // Solo, Lead or Contributor
     result: "",      // [NEEDED]
     timeline: "Sep 27 - 30, 2026", // from the first to the last commit
