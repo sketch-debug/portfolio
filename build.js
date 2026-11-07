@@ -195,13 +195,36 @@ function siteHeader(prefix) {
     '</nav></div></header>\n';
 }
 
+// Countries named in `location` are written as ISO 3166-1 alpha-2 codes, which is
+// what schema.org consumers expect. A name not in this list is passed through as
+// written rather than guessed at, since a wrong code is worse than a valid name.
+const COUNTRY_CODES = {
+  philippines: 'PH', 'united states': 'US', 'united states of america': 'US', usa: 'US',
+  canada: 'CA', 'united kingdom': 'GB', uk: 'GB', 'great britain': 'GB', ireland: 'IE',
+  australia: 'AU', 'new zealand': 'NZ', india: 'IN', pakistan: 'PK', bangladesh: 'BD',
+  singapore: 'SG', malaysia: 'MY', indonesia: 'ID', thailand: 'TH', vietnam: 'VN',
+  japan: 'JP', 'south korea': 'KR', korea: 'KR', china: 'CN', 'hong kong': 'HK', taiwan: 'TW',
+  'united arab emirates': 'AE', uae: 'AE', 'saudi arabia': 'SA', qatar: 'QA', israel: 'IL',
+  germany: 'DE', france: 'FR', spain: 'ES', italy: 'IT', netherlands: 'NL', belgium: 'BE',
+  switzerland: 'CH', austria: 'AT', portugal: 'PT', poland: 'PL', sweden: 'SE',
+  norway: 'NO', denmark: 'DK', finland: 'FI', mexico: 'MX', brazil: 'BR', argentina: 'AR',
+  'south africa': 'ZA', nigeria: 'NG', kenya: 'KE', egypt: 'EG'
+};
+
+function countryCode(value) {
+  const raw = String(value || '').trim();
+  const code = COUNTRY_CODES[raw.toLowerCase().replace(/\./g, '')];
+  if (code) return code;
+  return /^[A-Za-z]{2}$/.test(raw) ? raw.toUpperCase() : raw;
+}
+
 // "Daet 4600, Philippines" becomes a PostalAddress: the last part is the country,
 // and a trailing 4-6 digit number on the rest is the postal code. A location with
 // no commas stays a plain locality rather than being guessed at.
 function postalAddress(value) {
   const parts = String(value).split(',').map(function (s) { return s.trim(); }).filter(Boolean);
   const address = { '@type': 'PostalAddress' };
-  if (parts.length > 1) address.addressCountry = parts.pop();
+  if (parts.length > 1) address.addressCountry = countryCode(parts.pop());
   const locality = parts.join(', ');
   const withCode = locality.match(/^(.*?)\s+(\d{4,6})$/);
   if (withCode) {
