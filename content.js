@@ -161,7 +161,7 @@ const PROJECTS = [
     status: "",
     role: "Solo",    // Solo, Lead or Contributor
     result: "",      // [NEEDED] one real number, if you have one
-    timeline: "",
+    timeline: "Oct 23 - 29, 2026", // from the first to the last commit
     team: "",
 
     problem: "A small team has endpoint logs and indicator lists, but nothing that turns them into incidents someone can work through.",
@@ -200,7 +200,7 @@ const PROJECTS = [
     status: "",
     role: "Solo",    // Solo, Lead or Contributor
     result: "",      // [NEEDED] one real number, if you have one
-    timeline: "",
+    timeline: "Oct 2026",          // every commit landed on Oct 15, 2026 - widen if the build ran longer
     team: "",
 
     problem: "Stock disappears into edited spreadsheets: there is no audit trail, and a wrong cell is impossible to trace.",
@@ -237,7 +237,7 @@ const PROJECTS = [
     status: "",
     role: "Solo",    // Solo, Lead or Contributor
     result: "",      // [NEEDED]
-    timeline: "",
+    timeline: "Sep 27 - 30, 2026", // from the first to the last commit
     team: "",
 
     problem: "Three scanners each answer in their own shape, with their own severities, so nobody can tell what actually needs fixing first.",
