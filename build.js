@@ -549,7 +549,10 @@ if (has(SITE.about) || has(SITE.skills)) {
   standing.push({
     dir: 'about',
     body: aboutBody(),
-    title: has(SITE.name) ? 'About ' + SITE.name : 'About',
+    // The role belongs in this title: it is the page someone opens to check who he
+    // is. Kept short enough (~44 characters) that Google does not truncate it.
+    title: (has(SITE.name) ? 'About ' + SITE.name : 'About') +
+      (has(SITE.title) ? ', ' + SITE.title : ''),
     desc: has(SITE.bio) ? String(SITE.bio) : 'About'
   });
 }
