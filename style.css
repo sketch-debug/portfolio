@@ -354,9 +354,17 @@ h2.big { font-family: var(--display); font-weight: 700; font-size: 40px; letter-
   .site-header.is-open #site-nav { display: flex; }
   #site-nav .nav-link { min-height: 52px; font-size: 17px; border-bottom: 1px solid var(--line); }
   #site-nav .btn { margin-top: 16px; min-height: 52px; font-size: 16px; font-weight: 600; }
-  .hero { padding-top: 40px; padding-bottom: 48px; gap: 36px; }
-  .lead { font-size: 17px; }
+  /* The hero has to fit its three buttons on a small phone without a scroll.
+     That comes from tightening the block, not from dropping the headline or
+     the bio: less padding, tighter gaps, a smaller headline, and the two
+     secondary buttons sharing one row under the primary. */
+  .hero { padding-top: 16px; padding-bottom: 32px; gap: 36px; }
+  .hero__text { gap: 14px; }
+  .hero h1 { font-size: clamp(28px, 7.6vw, 34px); line-height: 1.1; }
+  .lead { font-size: 16px; line-height: 1.5; }
+  .actions { gap: 10px; }
   .actions .btn { flex: 1 1 100%; }
+  .actions .btn--secondary { flex: 1 1 calc(50% - 5px); padding: 0 10px; font-size: 15px; }
   .section { padding-bottom: 56px; gap: 24px; }
   h2.big { font-size: 30px; }
   .band .section, .about .section { padding-top: 56px; padding-bottom: 56px; }
@@ -375,6 +383,14 @@ h2.big { font-family: var(--display); font-weight: 700; font-size: 40px; letter-
   .hero__side { flex: 1 1 100%; max-width: none; }
   .pager { grid-template-columns: minmax(0, 1fr); }
   .pager .pager--next { text-align: left; }
+}
+
+/* ---------- Small phones (iPhone SE and older) ---------- */
+@media (max-width: 380px) {
+  .hero { padding-top: 12px; }
+  .hero__text { gap: 12px; }
+  .hero h1 { font-size: 26px; }
+  .lead { font-size: 15px; line-height: 1.45; }
 }
 
 /* ---------- Printing (paper or Save as PDF) ---------- */
