@@ -433,6 +433,30 @@ function aboutBody() {
     linkButton('Download resume', resumeHref, 'btn--secondary', false, ' download') +
     linkButton('LinkedIn', SITE.linkedin, 'btn--secondary', true);
 
+  // The resume details: where he is, how to call, and what he holds. Each card
+  // hides itself when its field is empty, like every other optional block.
+  const telHref = (v) => 'tel:' + String(v).replace(/[^\d+]/g, '');
+  const card = (label, value, note) => (has(value) || has(note))
+    ? '<div class="glance__item"><span class="label">' + esc(label) + '</span>' +
+      (has(value) ? '<p>' + value + '</p>' : '') +
+      (has(note) ? '<p class="muted">' + esc(note) + '</p>' : '') + '</div>'
+    : '';
+  const joined = (parts) => parts.filter(has).map(esc).join(' · ');
+  const details = [
+    card('Location', has(SITE.location) ? esc(SITE.location) : '', ''),
+    card('Phone', has(SITE.phone) ? '<a href="' + esc(telHref(SITE.phone)) + '">' + esc(SITE.phone) + '</a>' : '', ''),
+    list(SITE.education).map(function (e) {
+      return card('Education', has(e.qualification) ? esc(e.qualification) : '', joined([e.school, e.year]));
+    }).join(''),
+    list(SITE.certifications).map(function (c) {
+      return card('Certification', has(c.name) ? esc(c.name) : '', joined([c.issuer, c.year]));
+    }).join(''),
+  ].join('');
+  const detailsBlock = details
+    ? '<section class="wrap section"><div class="glance"><h2 class="label">Details</h2>' +
+      '<div class="glance__row">' + details + '</div></div></section>'
+    : '';
+
   return '<section class="wrap project">' +
     '<p class="label label--accent">About</p>' +
     '<div class="pagehead__text">' +
@@ -445,7 +469,7 @@ function aboutBody() {
     '<div class="about"><div class="wrap section">' +
     (paras ? '<div class="about__text"><h2 class="big">How I work</h2>' + paras + '</div>' : '') +
     (skills ? '<div class="skills">' + skills + '</div>' : '') +
-    '</div></div>';
+    '</div></div>' + detailsBlock;
 }
 
 function contactBody() {

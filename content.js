@@ -30,6 +30,8 @@ const SITE = {
 
   /* ---------- CONTACT ---------- */
   email: "Jeffreyvaleros12@gmail.com",    // The one action on this site.
+  phone: "+63 909 3936 928",              // OPTIONAL. Shown on the About page as a tap-to-call link. "" = hide.
+  location: "Daet 4600, Philippines",     // OPTIONAL. Shown on the About page. "" = hide.
   github: "https://github.com/sketch-debug", // OPTIONAL. Full link, starting with https://
   linkedin: "https://www.linkedin.com/in/jeffrey-valeros-bb90593a3", // OPTIONAL. Full link, starting with https://
   otherLinks: [                           // OPTIONAL. Any other links. Use [] to hide.
@@ -59,6 +61,17 @@ const SITE = {
     { group: "Tooling",   items: ["FastAPI", "SQLite", "openpyxl", "pytest", "GitHub Actions"] },
     { group: "Security",  items: ["Checkov", "Trivy", "Bandit", "SARIF"] },
     { group: "Practice",  items: ["Append-only ledgers", "Drift gates", "Fixture tests", "Read-only by design"] },
+  ],
+
+  /* ABOUT PAGE EXTRAS: the details cards under "How I work" on the About page.
+     One line per school or certificate. Empty ([]) = that card is hidden. */
+  education: [
+    { qualification: "Bachelor of Science in Information Technology",
+      school: "University of Camarines Norte",
+      year: "2022 - 2026" },
+  ],
+  certifications: [
+    { name: "Certified IT Support Specialist", issuer: "Appdademiya", year: "Aug 2026" },
   ],
 
   /* TESTIMONIALS: ONLY add real feedback from real people. Empty = the section is hidden.
