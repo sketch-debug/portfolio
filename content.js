@@ -159,7 +159,7 @@ const PROJECTS = [
     summary: "A defensive, read-only threat detection and incident tracker for Windows endpoints, with a local dashboard.",
 
     status: "",
-    role: "",        // [NEEDED] Solo, Lead or Contributor
+    role: "Solo",    // Solo, Lead or Contributor
     result: "",      // [NEEDED] one real number, if you have one
     timeline: "",
     team: "",
@@ -198,7 +198,7 @@ const PROJECTS = [
     summary: "An append-only stock ledger for a clinic, built as a macro-enabled Excel workbook that staff already know how to use.",
 
     status: "",
-    role: "",        // [NEEDED]
+    role: "Solo",    // Solo, Lead or Contributor
     result: "",      // [NEEDED] one real number, if you have one
     timeline: "",
     team: "",
@@ -235,7 +235,7 @@ const PROJECTS = [
     summary: "A command-line tool that runs Checkov, Trivy and Bandit over a codebase and returns one normalized, prioritized SARIF report.",
 
     status: "",
-    role: "",        // [NEEDED]
+    role: "Solo",    // Solo, Lead or Contributor
     result: "",      // [NEEDED]
     timeline: "",
     team: "",
