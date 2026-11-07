@@ -187,7 +187,7 @@ const PROJECTS = [
     screenshots: [], // [NEEDED] images/endpoint-threat-tracker-1.png, 1600 x 1000
 
     demoUrl: "",
-    githubUrl: "",   // [NEEDED] the repo is private, so a link would 404 for visitors. Make it public, then paste it here.
+    githubUrl: "https://github.com/sketch-debug/endpoint-threat-tracker",
     videoUrl: "",
   },
 
@@ -224,7 +224,7 @@ const PROJECTS = [
     screenshots: [], // [NEEDED]
 
     demoUrl: "",
-    githubUrl: "",   // [NEEDED] make the repo public to show a source button
+    githubUrl: "https://github.com/sketch-debug/clinic-inventory",
     videoUrl: "",
   },
 
@@ -262,7 +262,7 @@ const PROJECTS = [
     screenshots: [], // [NEEDED]
 
     demoUrl: "",
-    githubUrl: "",   // [NEEDED]
+    githubUrl: "https://github.com/sketch-debug/secure-review",
     videoUrl: "",
   },
 
