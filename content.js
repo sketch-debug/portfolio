@@ -28,6 +28,13 @@ const SITE = {
   headline: "I build operational systems where the rules are enforced by tests and build gates.", // The big sentence at the top.
   bio: "Three systems, one method: a clinic stock ledger that refuses silent edits, a read-only endpoint threat tracker that turns logs into incidents, and a CLI that normalises three security scanners into one report. In each one the rules are executable - a gate fails the build when they stop holding.", // Under the headline. 2-3 sentences.
 
+  /* ---------- SEARCH RESULT TEXT (all OPTIONAL) ---------- */
+  // The grey line under your name in Google. Aim for 150-160 characters; anything
+  // longer is cut off mid-sentence. "" = falls back to the headline and bio above.
+  seoDescription: "IT support specialist in Daet, Philippines. I build systems where tests enforce the rules: a clinic stock ledger, an endpoint tracker and a security review CLI.",
+  aboutDescription: "How I build: one source of truth for the rules, append-only ledgers where a correction is a reversal row, and tests that drive the real macros.",
+  contactDescription: "Email Jeffrey Valeros, IT support specialist in Daet, Philippines, about full-time roles, contract work, or any of the three systems on this site.",
+
   /* ---------- CONTACT ---------- */
   email: "Jeffreyvaleros12@gmail.com",    // The one action on this site.
   phone: "+63 909 3936 928",              // OPTIONAL. Shown on the About page as a tap-to-call link. "" = hide.

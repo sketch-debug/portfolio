@@ -692,7 +692,9 @@
       ? 'Not found | ' + SITE_NAME
       : (titleParts.length ? titleParts.join(' | ') : SITE_NAME);
 
-    var desc = p ? p.summary : String(SITE.headline || '') + ' ' + String(SITE.bio || '');
+    var desc = p ? p.summary
+      : (has(SITE.seoDescription) ? String(SITE.seoDescription)
+        : String(SITE.headline || '') + ' ' + String(SITE.bio || ''));
     if (metaEl) metaEl.setAttribute('content', has(desc) ? String(desc).trim() : DEFAULT_DESC);
 
     writeJsonLd();

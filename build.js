@@ -392,6 +392,9 @@ function homeTitle() {
 }
 
 function homeDesc() {
+  // A dedicated one-line description wins, because a headline plus a bio runs well
+  // past the ~155 characters Google shows before it truncates.
+  if (has(SITE.seoDescription)) return String(SITE.seoDescription).trim();
   const joined = [SITE.headline, SITE.bio].filter(function (v) { return has(v); }).join(' ').trim();
   return joined || 'Portfolio of software systems.';
 }
@@ -636,14 +639,16 @@ if (has(SITE.about) || has(SITE.skills)) {
     // is. Kept short enough (~44 characters) that Google does not truncate it.
     title: (has(SITE.name) ? 'About ' + SITE.name : 'About') +
       (has(SITE.title) ? ', ' + SITE.title : ''),
-    desc: has(SITE.bio) ? String(SITE.bio) : 'About'
+    desc: has(SITE.aboutDescription) ? String(SITE.aboutDescription)
+      : (has(SITE.bio) ? String(SITE.bio) : 'About')
   });
 }
 standing.push({
   dir: 'contact',
   body: contactBody(),
   title: 'Contact | ' + SITE_NAME,
-  desc: 'Email ' + SITE_NAME + (has(SITE.title) ? ', ' + SITE.title : '') + '.'
+  desc: has(SITE.contactDescription) ? String(SITE.contactDescription)
+    : 'Email ' + SITE_NAME + (has(SITE.title) ? ', ' + SITE.title : '') + '.'
 });
 
 standing.forEach(function (page) {
