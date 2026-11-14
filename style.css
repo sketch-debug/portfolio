@@ -268,9 +268,7 @@ h2.big { font-family: var(--display); font-weight: 700; font-size: 40px; letter-
 .pagehead h1 { font-family: var(--display); font-weight: 700; font-size: clamp(34px, 5.5vw, 56px); line-height: 1.05; letter-spacing: -0.02em; }
 .pagehead .lead { font-size: 20px; max-width: 660px; }
 .strip { display: flex; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
-.strip { align-self: flex-start; }
 .strip div { flex: 1 1 200px; display: flex; flex-direction: column; gap: 6px; padding: 22px 28px; }
-.strip div:only-child { flex: 0 0 auto; }
 .strip span.v { font-size: 16px; font-weight: 500; }
 .glance { display: flex; flex-direction: column; gap: 16px; }
 .glance__row { display: flex; flex-wrap: wrap; gap: 20px; }
