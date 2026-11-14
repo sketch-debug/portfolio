@@ -191,7 +191,13 @@ const PROJECTS = [
     ],
     results: [],     // [NEEDED] real numbers only: incidents triaged, time saved, false positives cut.
 
-    screenshots: [], // [NEEDED] images/endpoint-threat-tracker-1.png, 1600 x 1000
+    // Real captures of the tracker running on the generated demo fleet. The first is
+    // the cover image; the rest fill the Screenshots section further down the page.
+    screenshots: [
+      "images/endpoint-threat-tracker-1.png",
+      "images/endpoint-threat-tracker-2.png",
+      "images/endpoint-threat-tracker-3.png",
+    ],
 
     demoUrl: "",
     githubUrl: "",   // private repo: a public link would 404, so no button is shown
