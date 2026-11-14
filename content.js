@@ -194,7 +194,7 @@ const PROJECTS = [
     screenshots: [], // [NEEDED] images/endpoint-threat-tracker-1.png, 1600 x 1000
 
     demoUrl: "",
-    githubUrl: "https://github.com/sketch-debug/endpoint-threat-tracker",
+    githubUrl: "",   // private repo: a public link would 404, so no button is shown
     videoUrl: "",
   },
 
@@ -231,7 +231,7 @@ const PROJECTS = [
     screenshots: [], // [NEEDED]
 
     demoUrl: "",
-    githubUrl: "https://github.com/sketch-debug/clinic-inventory",
+    githubUrl: "",   // private repo: a public link would 404, so no button is shown
     videoUrl: "",
   },
 
@@ -269,7 +269,7 @@ const PROJECTS = [
     screenshots: [], // [NEEDED]
 
     demoUrl: "",
-    githubUrl: "https://github.com/sketch-debug/secure-review",
+    githubUrl: "",   // private repo: a public link would 404, so no button is shown
     videoUrl: "",
   },
 
