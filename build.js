@@ -15,6 +15,7 @@
 'use strict';
 
 const fs = require('fs');
+const { execFileSync } = require('child_process');
 const path = require('path');
 const vm = require('vm');
 
@@ -672,14 +673,34 @@ standing.forEach(function (page) {
   written.push(page.dir + '/index.html');
 });
 
-if (BASE) {
+// The date a page last really changed. A page this build rewrote but nobody has
+// committed yet is marked today; one git already holds gets the date of the commit
+// that last touched it. Stamping every URL with today on every deploy is a signal
+// search engines learn to ignore. Without git, everything falls back to today.
+function lastChanged(rel) {
   const today = new Date().toISOString().slice(0, 10);
-  const urls = ['<url><loc>' + esc(ABS('')) + '</loc><lastmod>' + today + '</lastmod></url>']
+  const git = function (args) {
+    try {
+      return execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+    } catch (err) {
+      return '';
+    }
+  };
+  if (git(['status', '--porcelain', '--', rel])) return today;
+  const date = git(['log', '-1', '--format=%cs', '--', rel]);
+  return /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : today;
+}
+
+if (BASE) {
+  const url = function (rel, address) {
+    return '<url><loc>' + esc(address) + '</loc><lastmod>' + lastChanged(rel) + '</lastmod></url>';
+  };
+  const urls = [url('index.html', ABS(''))]
     .concat(valid.map(function (p) {
-      return '<url><loc>' + esc(ABS('projects/' + p.id + '/')) + '</loc><lastmod>' + today + '</lastmod></url>';
+      return url('projects/' + p.id + '/index.html', ABS('projects/' + p.id + '/'));
     }))
     .concat(standing.map(function (page) {
-      return '<url><loc>' + esc(ABS(page.dir + '/')) + '</loc><lastmod>' + today + '</lastmod></url>';
+      return url(page.dir + '/index.html', ABS(page.dir + '/'));
     }));
   fs.writeFileSync(path.join(ROOT, 'sitemap.xml'),
     '<?xml version="1.0" encoding="UTF-8"?>\n' +
