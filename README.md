@@ -12,6 +12,7 @@ This site has no installs and no database. You edit **one file** (`content.js`),
 | `index.html`, `app.js`, `page.js`, `live.js`, `style.css`, `fonts.css` | The engine and the look | No |
 | `fonts/` | The typefaces, stored in this folder (no Google Fonts) | No |
 | `build.js` | Makes one shareable page per system (optional, see 3b) | No |
+| `check.js` | Run `node check.js` after editing `build.js` or `app.js`: it fails if the two copies of the same logic drift apart | No |
 | `projects/`, `404.html` | Made by `build.js`. Delete a project folder if you delete that system | No |
 | `sitemap.xml` | Made by `build.js` once the site address is known | No |
 | `robots.txt` | Tells search engines they may index the site | Only if your address changes |

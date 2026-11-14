@@ -72,8 +72,9 @@
   }
 
   // Only allow normal links (web, email, phone) or files in this folder. Blocks "javascript:" and similar.
+  // Kept identical to build.js by check.js: a missing value must not become "undefined".
   function safeUrl(u) {
-    u = String(u).trim();
+    u = String(u || '').trim();
     if (/^(https?:|mailto:|tel:)/i.test(u)) return u;
     if (/^[a-z][a-z0-9+.\-]*:/i.test(u)) return '';
     return u;
