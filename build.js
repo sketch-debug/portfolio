@@ -94,7 +94,7 @@ const SITE_ROOT = (function () {
   return '';
 })();
 
-const FAVICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230F1720'/%3E%3Crect x='8' y='17' width='4' height='7' rx='1' fill='%232438D9'/%3E%3Crect x='14' y='12' width='4' height='12' rx='1' fill='%23FFFFFF'/%3E%3Crect x='20' y='8' width='4' height='16' rx='1' fill='%235B6CFF'/%3E%3C/svg%3E";
+const FAVICON = "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='7'%20fill='%230F1720'/%3E%3Crect%20x='8'%20y='17'%20width='4'%20height='7'%20rx='1'%20fill='%232438D9'/%3E%3Crect%20x='14'%20y='12'%20width='4'%20height='12'%20rx='1'%20fill='%23FFFFFF'/%3E%3Crect%20x='20'%20y='8'%20width='4'%20height='16'%20rx='1'%20fill='%235B6CFF'/%3E%3C/svg%3E";
 
 /* ---------- 3. pieces of one project page ---------- */
 
@@ -175,7 +175,7 @@ function pagerHtml(p, index, valid) {
     '<div><span class="label">' + (dir === 'prev' ? 'Previous' : 'Next') + ' system</span><strong>' + esc(item.name) + '</strong></div>' +
     (dir === 'next' ? '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' : '') +
     '</a>';
-  return '<section class="next"><div class="wrap pager">' + card(prev, 'prev') + card(next, 'next') + '</div></section>';
+  return '<nav class="next" aria-label="More projects"><div class="wrap pager">' + card(prev, 'prev') + card(next, 'next') + '</div></nav>';
 }
 
 const MENU_ICON = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';

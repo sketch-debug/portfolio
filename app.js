@@ -132,11 +132,6 @@
     return '<span class="status"><span class="dot ' + cls + '" aria-hidden="true"></span>' + esc(status) + '</span>';
   }
 
-  function findProject(id) {
-    for (var i = 0; i < PROJECTS.length; i++) if (PROJECTS[i].id === id) return PROJECTS[i];
-    return null;
-  }
-
   function types() {
     var out = [];
     PROJECTS.forEach(function (p) { if (has(p.type) && out.indexOf(p.type) === -1) out.push(p.type); });
@@ -397,7 +392,7 @@
         (has(p.role) ? '<div><span class="label">My role</span><span class="fact fact--muted">' + esc(p.role) + '</span></div>' : '') +
         '</div>';
     }
-    return '<a class="card" href="#/project/' + esc(encodeURIComponent(p.id)) + '">' +
+    return '<a class="card" href="projects/' + esc(encodeURIComponent(p.id)) + '/">' +
       shot(list(p.screenshots)[0], p.name + ' screenshot') +
       '<div class="card__body"><div class="card__meta"><span class="label">' + pad(n) + ' / ' + esc(p.type) + '</span>' + statusHtml(p.status) + '</div>' +
       '<h3>' + esc(p.name) + '</h3><p>' + esc(p.summary) + '</p>' + facts +
@@ -468,91 +463,6 @@
   }
 
   /* ====================== project page ====================== */
-
-  function projectPage(p) {
-    var shots = list(p.screenshots);
-    var idx = PROJECTS.indexOf(p);
-    var links = btn('Live demo', p.demoUrl, 'btn--primary', 'external') +
-      btn('Source on GitHub', p.githubUrl, 'btn--secondary', 'external', ' data-github-link') +
-      btn('Watch demo video', p.videoUrl, 'btn--secondary', 'external');
-
-    var strip = [['Role', p.role], ['Timeline', p.timeline], ['Team', p.team], ['Type', p.type]]
-      .filter(function (x) { return has(x[1]); })
-      .map(function (x) { return '<div><span class="label">' + x[0] + '</span><span class="v">' + esc(x[1]) + '</span></div>'; }).join('');
-
-    var glance = [['The problem', p.problem, ''], ['What I built', p.built, ''], ['The result', p.result, ' glance__item--result']]
-      .filter(function (x) { return has(x[1]); })
-      .map(function (x) { return '<div class="glance__item' + x[2] + '"><span class="label' + (x[2] ? ' label--accent' : '') + '">' + x[0] + '</span><p>' + esc(x[1]) + '</p></div>'; }).join('');
-
-    var features = list(p.features).length
-      ? '<section class="block"><h2>Key features</h2><div class="features">' + list(p.features).map(function (f, n) {
-          return '<div class="feature"><span class="num">' + pad(n + 1) + '</span><div><h3>' + esc(f.title) + '</h3>' +
-            (has(f.text) ? '<p>' + esc(f.text) + '</p>' : '') + '</div></div>';
-        }).join('') + '</div></section>' : '';
-
-    var challenges = list(p.challenges).length
-      ? '<section class="block"><h2>Decisions and trade-offs</h2><div class="pairs">' + list(p.challenges).map(function (c) {
-          return '<div class="pair"><div><span class="label">The trade-off</span><p>' + esc(c.challenge) + '</p></div>' +
-            '<div><span class="label label--accent">What I did</span><p>' + esc(c.solution) + '</p></div></div>';
-        }).join('') + '</div></section>' : '';
-
-    var results = list(p.results).length
-      ? '<section class="block"><h2>Results</h2><div class="tiles">' + list(p.results).map(function (r) {
-          return '<div class="tile"><strong>' + esc(r.value) + '</strong><span>' + esc(r.label) + '</span></div>';
-        }).join('') + '</div></section>' : '';
-
-    // "What I would change" - the part most portfolios skip, and the one a good
-    // interviewer reads first. Hidden until there is a real answer in content.js.
-    var change = has(p.change)
-      ? '<section class="block"><h2>What I would change</h2><p class="body">' + esc(p.change) + '</p></section>' : '';
-
-    var gallery = shots.length > 1
-      ? '<section class="block"><h2>Screenshots</h2><div class="gallery">' + shots.slice(1).map(function (s, n) {
-          return shot(s, p.name + ' screenshot ' + (n + 2));
-        }).join('') + '</div></section>' : '';
-
-    var side = list(p.stack).length
-      ? '<div class="layout__side"><div class="sidecard"><h2 class="label">Tech stack</h2><div class="tags">' +
-        list(p.stack).map(function (t) { return '<span class="tag">' + esc(t) + '</span>'; }).join('') + '</div></div></div>' : '';
-
-    var main = features + challenges + results + change + gallery;
-    var layout = (main || side)
-      ? '<div class="layout wrap"><div class="layout__main">' + main + '</div>' + side + '</div>' : '';
-
-    var pager = '';
-    if (PROJECTS.length > 1) {
-      var pp = PROJECTS[(idx - 1 + PROJECTS.length) % PROJECTS.length];
-      var np = PROJECTS[(idx + 1) % PROJECTS.length];
-      pager = '<section class="next"><div class="wrap pager">' +
-        '<a class="pager--prev" href="#/project/' + esc(encodeURIComponent(pp.id)) + '">' + icon('back') +
-        '<div><span class="label">Previous system</span><strong>' + esc(pp.name) + '</strong></div></a>' +
-        '<a class="pager--next" href="#/project/' + esc(encodeURIComponent(np.id)) + '">' +
-        '<div><span class="label">Next system</span><strong>' + esc(np.name) + '</strong></div>' + icon('arrow') + '</a>' +
-        '</div></section>';
-    }
-
-    return '<article><div class="wrap project">' +
-      '<a class="crumb" href="#/" data-scroll="projects">' + icon('back') + 'All projects</a>' +
-      '<div class="pagehead"><div class="pagehead__text"><div class="pagehead__meta"><span class="label">' + pad(idx + 1) + ' / ' + esc(p.type) + '</span>' + statusHtml(p.status) + '</div>' +
-      '<h1>' + esc(p.name) + '</h1><p class="lead">' + esc(p.summary) + '</p></div>' +
-      '<div class="actions">' + links +
-      '<button type="button" class="copybtn" data-copy>Copy link</button></div></div>' +
-      (strip ? '<div class="strip">' + strip + '</div>' : '') +
-      liveLine(p) +
-      (glance ? '<div class="glance"><h2 class="label">At a glance</h2><div class="glance__row">' + glance + '</div></div>' : '') +
-      (shots.length ? shot(shots[0], p.name + ' main screenshot', 'shot--round', true) : '') +
-      '</div>' + layout +
-      '<section class="cta"><div class="wrap"><div><h2>Need a system like this?</h2><p>' +
-      (has(SITE.replyTime) ? 'Tell me about your problem. I reply within ' + esc(SITE.replyTime) + '.' : 'Tell me about your problem.') +
-      '</p></div><a class="btn btn--white" href="#/" data-scroll="contact">Start a project' + icon('arrow') + '</a></div></section>' +
-      pager + '</article>';
-  }
-
-  function notFoundPage() {
-    return '<section class="wrap project"><a class="crumb" href="#/" data-scroll="projects">' + icon('back') + 'All projects</a>' +
-      '<h1 style="font-family:var(--display);font-size:40px">That system was not found</h1>' +
-      '<p class="muted">The link may be old. Go back to the list of projects and pick one.</p></section>';
-  }
 
   /* ====================== routing and rendering ====================== */
 
@@ -663,8 +573,13 @@
 
   function route() {
     var hash = location.hash || '';
-    var m = hash.match(/^#\/project\/([^/?#]+)/);
-    if (m) return { name: 'project', id: decodeURIComponent(m[1]) };
+    // Project pages are static files now. An old #/project/<id> link is redirected to
+    // the real page, so it keeps its own title, description and structured data.
+    var legacy = hash.match(/^#\/project\/([^/?#]+)/);
+    if (legacy) {
+      location.replace('projects/' + encodeURIComponent(decodeURIComponent(legacy[1])) + '/');
+      return { name: 'home' };
+    }
     // Plain links like index.html#contact still land on the right section.
     var anchor = hash.match(/^#(projects|proof|about|contact)$/);
     return anchor ? { name: 'home', anchor: anchor[1] } : { name: 'home' };
@@ -678,23 +593,18 @@
     var key = r.name + ':' + (r.id || '') + ':' + (r.anchor || '');
     var moved = state.routeKey !== '' && state.routeKey !== key;
     state.routeKey = key;
-    var p = r.name === 'project' ? findProject(r.id) : null;
-    var body = r.name === 'project' ? (p ? projectPage(p) : notFoundPage()) : homePage();
+    var body = homePage();
 
     app.innerHTML = headerHtml() + '<main id="main" tabindex="-1">' + devbarHtml() + checkBanner() + body + contactSection() + '</main>' + footerHtml();
 
     // Build the title from the parts that exist; fall back to "Portfolio" while content is still empty.
     var titleParts = [];
-    if (p && has(p.name)) titleParts.push(p.name);
     if (has(SITE.name)) titleParts.push(SITE.name);
-    if (!p && has(SITE.title)) titleParts.push(SITE.title);
-    document.title = (r.name === 'project' && !p)
-      ? 'Not found | ' + SITE_NAME
-      : (titleParts.length ? titleParts.join(' | ') : SITE_NAME);
+    if (has(SITE.title)) titleParts.push(SITE.title);
+    document.title = titleParts.length ? titleParts.join(' | ') : SITE_NAME;
 
-    var desc = p ? p.summary
-      : (has(SITE.seoDescription) ? String(SITE.seoDescription)
-        : String(SITE.headline || '') + ' ' + String(SITE.bio || ''));
+    var desc = has(SITE.seoDescription) ? String(SITE.seoDescription)
+      : String(SITE.headline || '') + ' ' + String(SITE.bio || '');
     if (metaEl) metaEl.setAttribute('content', has(desc) ? String(desc).trim() : DEFAULT_DESC);
 
     writeJsonLd();
