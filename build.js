@@ -318,13 +318,21 @@ function pageHtml(p, index, valid) {
     }
   }
 
-  const actions = [
-    linkButton('Live demo', p.demoUrl, 'btn--primary', true),
-    linkButton('Source on GitHub', p.githubUrl, 'btn--secondary', true, ' data-github-link'),
-    linkButton('Watch demo video', p.videoUrl, 'btn--secondary', true),
-    '<button type="button" class="copybtn" data-copy>Copy link</button>' +
-    '<span class="sr-only" role="status" data-copy-status></span>'
-  ].join('');
+  // A button per real link, plus Copy link. With nothing to link to - a private repo,
+  // no hosted demo - a lone Copy link in the corner just looks like an empty column,
+  // so it moves up into the label line and the actions column disappears.
+  const hasLinks = has(p.demoUrl) || has(p.githubUrl) || has(p.videoUrl);
+  const copyButton = '<button type="button" class="copybtn' + (hasLinks ? '' : ' copybtn--meta') +
+    '" data-copy>Copy link</button>' +
+    '<span class="sr-only" role="status" data-copy-status></span>';
+  const actions = hasLinks
+    ? [
+      linkButton('Live demo', p.demoUrl, 'btn--primary', true),
+      linkButton('Source on GitHub', p.githubUrl, 'btn--secondary', true, ' data-github-link'),
+      linkButton('Watch demo video', p.videoUrl, 'btn--secondary', true),
+      copyButton
+    ].join('')
+    : '';
 
   const strip = [['Role', p.role], ['Timeline', p.timeline], ['Team', p.team], ['Type', p.type]]
     .filter((x) => has(x[1]))
@@ -362,9 +370,10 @@ function pageHtml(p, index, valid) {
     '<main id="main" tabindex="-1">\n<article>\n<div class="wrap project">' +
     '<a class="crumb" href="../../index.html#projects"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>All projects</a>' +
     '<div class="pagehead"><div class="pagehead__text"><div class="pagehead__meta">' +
-    '<span class="label">' + pad(index + 1) + ' / ' + esc(p.type) + '</span>' + statusHtml(p.status) + '</div>' +
+    '<span class="label">' + pad(index + 1) + ' / ' + esc(p.type) + '</span>' + statusHtml(p.status) +
+    (hasLinks ? '' : copyButton) + '</div>' +
     '<h1>' + esc(p.name) + '</h1><p class="lead">' + esc(p.summary) + '</p></div>' +
-    '<div class="actions">' + actions + '</div></div>' +
+    (hasLinks ? '<div class="actions">' + actions + '</div>' : '') + '</div>' +
     (strip ? '<div class="strip">' + strip + '</div>' : '') +
     (has(p.githubUrl) ? '<p class="live" data-live-repo="' + esc(p.githubUrl) + '"></p>' : '') +
     (glance ? '<div class="glance"><h2 class="label">At a glance</h2><div class="glance__row">' + glance + '</div></div>' : '') +
