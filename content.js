@@ -194,9 +194,10 @@ const PROJECTS = [
     // Real captures of the tracker running on the generated demo fleet. The first is
     // the cover image; the rest fill the Screenshots section further down the page.
     screenshots: [
-      "images/endpoint-threat-tracker-1.png",
+      "images/endpoint-threat-tracker-1.png", // close crop: reads in the small home-page card
       "images/endpoint-threat-tracker-2.png",
       "images/endpoint-threat-tracker-3.png",
+      "images/endpoint-threat-tracker-4.png",
     ],
 
     demoUrl: "",

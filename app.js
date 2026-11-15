@@ -397,8 +397,12 @@
         (has(p.role) ? '<div><span class="label">My role</span><span class="fact fact--muted">' + esc(p.role) + '</span></div>' : '') +
         '</div>';
     }
-    return '<a class="card" href="projects/' + esc(encodeURIComponent(p.id)) + '/">' +
-      shot(list(p.screenshots)[0], p.name + ' screenshot') +
+    // A project with no picture yet gets a text-first card rather than a hatched empty
+    // frame filling a third of it. The frame belongs in the preview, not the page.
+    var cover = list(p.screenshots)[0];
+    var hasCover = has(cover) && !isPlaceholder(cover);
+    return '<a class="card' + (hasCover ? '' : ' card--text') + '" href="projects/' + esc(encodeURIComponent(p.id)) + '/">' +
+      (hasCover ? shot(cover, p.name + ' screenshot') : '') +
       '<div class="card__body"><div class="card__meta"><span class="label">' + pad(n) + ' / ' + esc(p.type) + '</span>' + statusHtml(p.status) + '</div>' +
       '<h3>' + esc(p.name) + '</h3><p>' + esc(p.summary) + '</p>' + facts +
       liveLine(p) +
