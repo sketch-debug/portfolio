@@ -26,7 +26,7 @@ const SITE = {
   name: "Jeffrey Valeros",                // Top-left corner and footer.
   title: "IT Support Specialist",         // Small label above the headline. Also the job title in search results.
   headline: "I build operational systems where the rules are enforced by tests and build gates.", // The big sentence at the top.
-  bio: "Three systems, one method: a clinic stock ledger that refuses silent edits, a read-only endpoint threat tracker that turns logs into incidents, and a CLI that normalises three security scanners into one report. In each one the rules are executable - a gate fails the build when they stop holding.", // Under the headline. 2-3 sentences.
+  bio: "Each one replaces a habit someone has to remember with a check the build cannot skip.", // Under the headline. One sentence is plenty - the cards below list the systems.
 
   /* ---------- SEARCH RESULT TEXT (all OPTIONAL) ---------- */
   // The grey line under your name in Google. Aim for 150-160 characters; anything
