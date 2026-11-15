@@ -48,7 +48,7 @@ const SITE = {
 
   /* ---------- HOME PAGE EXTRAS (all OPTIONAL) ---------- */
   availability: "Open to full-time roles and contract work", // Small green-dot label in the top section. "" = hide.
-  replyTime: "",                          // Shows "I reply within [N] days." "" = hide.
+  replyTime: "2 days",                    // Shows "I reply within [N] days." "" = hide.
   resumeUrl: "files/Jeffrey-Valeros-Resume.pdf",  // The button hides itself when this is "". Generated from files/resume.html.
   photo: "",                              // [NEEDED] Your photo, for example "images/photo.jpg". "" = hide.
   accentColor: "#2438D9",                 // Main button color. Pick a DARK color so white text stays readable.
