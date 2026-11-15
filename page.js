@@ -77,6 +77,40 @@
     });
   }
 
+  /* ---------- message form ---------- */
+
+  // Same behaviour as the home page: send in the background, confirm inline, keep the
+  // visitor on the page. Without this script the form still posts normally.
+  var form = document.querySelector('form[data-form]');
+
+  if (form && window.fetch && window.FormData) {
+    form.addEventListener('submit', function (e) {
+      var trap = form.querySelector('[name="_gotcha"]');
+      if (trap && trap.value) return; // a bot filled the hidden field: stop quietly
+      e.preventDefault();
+
+      var status = form.querySelector('[data-form-status]');
+      var button = form.querySelector('button[type="submit"]');
+      if (button) { button.disabled = true; button.textContent = 'Sending...'; }
+      if (status) { status.className = 'form__note'; status.textContent = ''; }
+
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      }).then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        form.innerHTML = '<p class="form__done" role="status">Message sent. Thank you - I will reply soon.</p>';
+      }).catch(function () {
+        if (button) { button.disabled = false; button.textContent = 'Send message'; }
+        if (status) {
+          status.className = 'form__error';
+          status.textContent = 'Sorry, that did not send. Please try again, or use the email address on this page.';
+        }
+      });
+    });
+  }
+
   /* ---------- a screenshot that fails to load ---------- */
 
   document.addEventListener('error', function (e) {

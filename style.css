@@ -250,6 +250,9 @@ h2.big { font-family: var(--display); font-weight: 700; font-size: 40px; letter-
 .contact__details dd { margin: 0; font-size: 17px; line-height: 1.5; }
 .contact__details dd a { display: inline-flex; align-items: center; min-height: 44px; color: #FFFFFF; text-decoration: none; border-bottom: 1px solid #2B3644; }
 .contact__details dd a:hover { border-color: #FFFFFF; }
+/* The message form, on its own row under the two columns. */
+.contact__form { flex: 1 1 100%; max-width: 640px; display: flex; flex-direction: column; gap: 12px; }
+.form__title { font-family: var(--display); font-weight: 700; font-size: 26px; line-height: 1.2; color: #FFFFFF; }
 .form { flex: 1 1 400px; min-width: 0; display: flex; flex-direction: column; gap: 20px; padding: 32px; background: #18222E; border: 1px solid #2B3644; border-radius: var(--radius); }
 .form div { display: flex; flex-direction: column; gap: 8px; }
 .form label { font-size: 14px; font-weight: 500; color: #D5DBE4; }

@@ -619,6 +619,27 @@ function contactBody() {
     row('Resume', resume) +
     row('Reply time', has(SITE.replyTime) ? 'Within ' + esc(SITE.replyTime) : '');
 
+  // The same form the home page shows, so a visitor who does not want to open a mail app
+  // can write from this page. It stays absent until a real form URL is in content.js.
+  const formUrl = (has(SITE.contactFormUrl) && safeUrl(SITE.contactFormUrl))
+    ? safeUrl(SITE.contactFormUrl) : '';
+  const form = formUrl
+    ? '<div class="contact__form"><h2 class="form__title">Or write it here</h2>' +
+      '<p class="contact__note">It goes to the same inbox - no mail app needed.</p>' +
+      '<form class="form" action="' + esc(formUrl) + '" method="POST" data-form>' +
+      '<div><label for="f-name">Your name</label>' +
+      '<input id="f-name" name="name" type="text" required autocomplete="name"></div>' +
+      '<div><label for="f-email">Your email</label>' +
+      '<input id="f-email" name="email" type="email" required autocomplete="email"></div>' +
+      '<div><label for="f-msg">Message</label>' +
+      '<textarea id="f-msg" name="message" rows="4" required></textarea></div>' +
+      // Hidden spam trap: people never see it, spam bots fill it in.
+      '<div class="trap" aria-hidden="true"><label for="f-gotcha">Leave this field empty</label>' +
+      '<input id="f-gotcha" name="_gotcha" type="text" tabindex="-1" autocomplete="off"></div>' +
+      '<button type="submit" class="btn btn--white">Send message</button>' +
+      '<p class="form__note" data-form-status role="status"></p></form></div>'
+    : '';
+
   return '<section class="contact"><div class="wrap">' +
     '<div class="contact__text"><p class="label">Contact</p>' +
     '<h1 class="page-title">Tell me what is breaking, and what it costs.</h1>' +
@@ -630,6 +651,7 @@ function contactBody() {
       ? '<div class="contact__details"><dl>' + details + '</dl>' +
         (links ? '<div class="contact__links">' + links + '</div>' : '') + '</div>'
       : '') +
+    form +
     '</div></section>';
 }
 
