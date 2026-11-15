@@ -284,14 +284,16 @@
   /* ====================== shared pieces ====================== */
 
   function headerHtml() {
-    var links = '<a class="nav-link" href="#/" data-scroll="projects">Work</a>';
+    // A real anchor, like every other page uses: it survives the script failing and
+    // still means something to a crawler.
+    var links = '<a class="nav-link" href="#projects" data-scroll="projects">Work</a>';
     if (has(SITE.about) || has(SITE.skills)) links += '<a class="nav-link" href="about/">About</a>';
     links += '<a class="nav-link" href="contact/">Contact</a>';
     links += btn('Email me', has(SITE.email) ? 'mailto:' + SITE.email : '', 'btn--primary btn--sm');
 
     return '<a class="skip" href="#main" data-skip>Skip to content</a>' +
       '<header class="site-header" id="top"><div class="wrap bar">' +
-      '<a class="brand" href="#/" data-scroll="top"' + (has(SITE.name) ? '' : ' aria-label="Home"') + '>' +
+      '<a class="brand" href="./" data-scroll="top"' + (has(SITE.name) ? '' : ' aria-label="Home"') + '>' +
       esc(SITE_NAME) + '</a>' +
       '<button type="button" class="menu-btn" data-menu aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">' + icon('menu') + '</button>' +
       '<nav id="site-nav" aria-label="Primary">' + links + '</nav>' +
