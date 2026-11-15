@@ -447,6 +447,20 @@ function writeHomeMeta() {
 // mistyped /projects/<id>/ link.
 function notFoundHtml() {
   const home = SITE_ROOT || 'index.html';
+  // Absolute links: this page is served at whatever missing address was requested,
+  // so relative hrefs would resolve against the wrong folder.
+  const nav = '<a class="nav-link" href="' + esc(home) + '#projects">Work</a>' +
+    ((has(SITE.about) || has(SITE.skills)) ? '<a class="nav-link" href="' + esc(home) + 'about/">About</a>' : '') +
+    '<a class="nav-link" href="' + esc(home) + 'contact/">Contact</a>' +
+    linkButton('Email me', has(SITE.email) ? 'mailto:' + SITE.email : '', 'btn--primary btn--sm', false);
+  const cards = valid.map(function (p) {
+    return '<a class="card card--text" href="' + esc(home) + 'projects/' + encodeURIComponent(p.id) + '/">' +
+      '<div class="card__body"><div class="card__meta"><span class="label">' + pad(valid.indexOf(p) + 1) + ' / ' + esc(p.type) + '</span>' +
+      statusHtml(p.status) + '</div><h3>' + esc(p.name) + '</h3>' +
+      (has(p.summary) ? '<p>' + esc(p.summary) + '</p>' : '') +
+      '<span class="more">View details</span></div></a>';
+  }).join('');
+
   return '<!doctype html>\n<html lang="en">\n<head>\n' +
     '<meta charset="utf-8">\n' +
     '<meta name="viewport" content="width=device-width, initial-scale=1">\n' +
@@ -460,16 +474,17 @@ function notFoundHtml() {
     '<a class="skip" href="#main">Skip to content</a>\n' +
     '<header class="site-header"><div class="wrap bar">' +
     '<a class="brand" href="' + esc(home) + '">' + esc(SITE_NAME) + '</a>' +
-    '<a class="btn btn--primary btn--sm" href="' + esc(home) + '#contact">Contact</a>' +
-    '</div></header>\n' +
+    '<button type="button" class="menu-btn" data-menu aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">' + MENU_ICON + '</button>' +
+    '<nav id="site-nav" aria-label="Primary">' + nav + '</nav></div></header>\n' +
     '<main id="main" tabindex="-1"><section class="wrap project">' +
     '<p class="label">404</p>' +
     '<h1 style="font-family:var(--display);font-size:clamp(34px,5.5vw,56px);line-height:1.05;letter-spacing:-0.02em">That page was not found</h1>' +
-    '<p class="lead">The link may be old, or the address may have a typo.</p>' +
+    '<p class="lead">The link may be old, or the address may have a typo. Nothing is broken - pick a way back below.</p>' +
     '<div class="actions"><a class="btn btn--primary" href="' + esc(home) + '">Back to the portfolio</a></div>' +
+    (cards ? '<div class="block"><h2>Or jump straight to a system</h2><div class="grid">' + cards + '</div></div>' : '') +
     '</section></main>\n' +
-    '<footer class="footer"><div class="wrap"><span>&copy; ' + new Date().getFullYear() + ' ' + esc(SITE_NAME) + '</span>' +
-    '<a href="' + esc(home) + '">Back to the portfolio</a></div></footer>\n' +
+    '<footer class="footer"><div class="wrap"><span>&copy; ' + new Date().getFullYear() + ' ' + esc(SITE_NAME) + '</span></div></footer>\n' +
+    '<script src="' + SITE_ROOT + 'page.js"></script>\n' +
     '</body>\n</html>\n';
 }
 
