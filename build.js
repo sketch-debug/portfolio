@@ -250,7 +250,10 @@ function personNode() {
     name: SITE_NAME
   };
   if (has(SITE.title)) person.jobTitle = String(SITE.title);
-  if (has(SITE.bio)) person.description = String(SITE.bio);
+  // The hero line under the headline is a slogan, so the record takes the longer search
+  // description when there is one: structured data should describe, not persuade.
+  const personBlurb = has(SITE.seoDescription) ? String(SITE.seoDescription) : (has(SITE.bio) ? String(SITE.bio) : '');
+  if (has(personBlurb)) person.description = personBlurb;
   // A bare address: the mailto: scheme belongs on links, not in the record.
   if (has(SITE.email)) person.email = String(SITE.email);
   // Same facts the About page shows, in the shape a search engine expects.

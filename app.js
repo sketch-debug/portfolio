@@ -532,7 +532,8 @@
       '@type': 'Person',
       name: SITE_NAME,
       jobTitle: has(SITE.title) ? String(SITE.title) : undefined,
-      description: has(SITE.bio) ? String(SITE.bio) : undefined,
+      // Same rule as build.js: the longer search description beats the hero slogan.
+      description: has(SITE.seoDescription) ? String(SITE.seoDescription) : (has(SITE.bio) ? String(SITE.bio) : undefined),
       url: has(SITE.siteUrl) ? String(SITE.siteUrl) : undefined,
       // A bare address: the mailto: scheme belongs on links, not in the record.
       email: has(SITE.email) && !isPlaceholder(SITE.email) ? String(SITE.email) : undefined,
