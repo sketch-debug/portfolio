@@ -600,16 +600,37 @@ function contactBody() {
     : '';
   const links = linkButton('LinkedIn', SITE.linkedin, 'btn--outline-dark', true) +
     linkButton('GitHub', SITE.github, 'btn--outline-dark', true);
+  // Every row hides itself when the field is empty, so the card never shows a gap or
+  // a promise that was never made.
+  const row = function (label, value) {
+    return has(value)
+      ? '<div><dt>' + label + '</dt><dd>' + value + '</dd></div>'
+      : '';
+  };
+  const tel = has(SITE.phone) ? String(SITE.phone).replace(/[^\d+]/g, '') : '';
+  const phone = has(tel)
+    ? '<a href="tel:' + esc(tel) + '">' + esc(SITE.phone) + '</a>'
+    : '';
+  const resume = has(SITE.resumeUrl)
+    ? '<a href="' + esc(SITE_ROOT + safeUrl(SITE.resumeUrl)) + '">Download the resume (PDF)</a>'
+    : '';
+  const details = row('Phone', phone) +
+    row('Location', has(SITE.location) ? esc(SITE.location) : '') +
+    row('Resume', resume) +
+    row('Reply time', has(SITE.replyTime) ? 'Within ' + esc(SITE.replyTime) : '');
 
   return '<section class="contact"><div class="wrap">' +
     '<div class="contact__text"><p class="label">Contact</p>' +
     '<h1 class="page-title">Tell me what is breaking, and what it costs.</h1>' +
     '<p class="contact__note">A sentence about the system, the deadline and who uses it is enough to start. ' +
-    'Email reaches me directly - it is the one action on this site.</p>' +
+    'Email reaches me directly, and the details beside it are there if you would rather call.</p>' +
     email +
-    (has(SITE.replyTime) ? '<p class="contact__note">I reply within ' + esc(SITE.replyTime) + '.</p>' : '') +
-    (links ? '<div class="contact__links">' + links + '</div>' : '') +
-    '</div></div></section>';
+    '</div>' +
+    (details || links
+      ? '<div class="contact__details"><dl>' + details + '</dl>' +
+        (links ? '<div class="contact__links">' + links + '</div>' : '') + '</div>'
+      : '') +
+    '</div></section>';
 }
 
 /* ---------- 5. write the files ---------- */

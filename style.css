@@ -240,9 +240,16 @@ h2.big { font-family: var(--display); font-weight: 700; font-size: 40px; letter-
 .contact .label { color: #AEB7C4; }
 .contact a { color: #FFFFFF; }
 .contact :focus-visible { outline-color: #FFFFFF; }
-.email { font: 400 20px var(--mono); color: #FFFFFF; overflow-wrap: anywhere; }
+.email { display: inline-flex; align-items: center; min-height: 44px; font: 400 20px var(--mono); color: #FFFFFF; overflow-wrap: anywhere; }
 .contact__links { display: flex; flex-wrap: wrap; gap: 12px; }
 .contact__note { font-size: 15px; color: #D5DBE4; }
+/* The practical details, beside the email: who else to call, where he is, the resume. */
+.contact__details { flex: 1 1 320px; min-width: 0; align-self: flex-start; display: flex; flex-direction: column; gap: 24px; padding: 32px; background: #18222E; border: 1px solid #2B3644; border-radius: var(--radius); }
+.contact__details dl { display: flex; flex-direction: column; gap: 20px; margin: 0; }
+.contact__details dt { font: 500 12px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: #AEB7C4; margin-bottom: 4px; }
+.contact__details dd { margin: 0; font-size: 17px; line-height: 1.5; }
+.contact__details dd a { display: inline-flex; align-items: center; min-height: 44px; color: #FFFFFF; text-decoration: none; border-bottom: 1px solid #2B3644; }
+.contact__details dd a:hover { border-color: #FFFFFF; }
 .form { flex: 1 1 400px; min-width: 0; display: flex; flex-direction: column; gap: 20px; padding: 32px; background: #18222E; border: 1px solid #2B3644; border-radius: var(--radius); }
 .form div { display: flex; flex-direction: column; gap: 8px; }
 .form label { font-size: 14px; font-weight: 500; color: #D5DBE4; }
