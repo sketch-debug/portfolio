@@ -148,6 +148,7 @@
     phone: 'text', location: 'text', education: 'list', certifications: 'list', languages: 'list',
     availability: 'text', replyTime: 'text', resumeUrl: 'text', photo: 'text',
     accentColor: 'text', siteUrl: 'text',
+    seoDescription: 'text', aboutDescription: 'text', contactDescription: 'text',
     analyticsProvider: 'text', analyticsSite: 'text',
     otherLinks: 'list', about: 'list', skills: 'list', testimonials: 'list', credentials: 'list'
   };
@@ -267,7 +268,10 @@
     return out;
   }
 
+  // Only on your own computer. A visitor should never be greeted by a note telling you
+  // to fix content.js - and a false positive here would be published, as it once was.
   function checkBanner() {
+    if (!isLocalPreview()) return '';
     var p = problems();
     if (!p.length) return '';
     var shown = p.slice(0, 12);
